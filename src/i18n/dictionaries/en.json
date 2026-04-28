@@ -1,0 +1,238 @@
+{
+  "navigation": {
+    "kitchens": "Kitchen Remodeling",
+    "bathrooms": "Bathroom Remodeling",
+    "decks": "Deck Construction",
+    "evaluate": "Evaluate My Project",
+    "callUs": "Call Us"
+  },
+  "hero": {
+    "eyebrow": "Atlanta, GA · 15+ Years · 340+ Projects",
+    "h1Line1": "Architecture and",
+    "h1Line2": "Construction that",
+    "h1Line3": "Elevate Your Legacy.",
+    "subtext": "High-end remodeling in Atlanta. Kitchens, bathrooms, and decks from $30k to $150k built with millimeter precision, guaranteed price, and binding schedule.",
+    "ctaPrimary": "Request Evaluation",
+    "ctaSecondary": "View Projects",
+    "stats": [
+      { "value": "340+", "label": "Completed projects" },
+      { "value": "$2M+", "label": "In remodeling" },
+      { "value": "100%", "label": "Guaranteed price" },
+      { "value": "2 yr", "label": "Workmanship warranty" }
+    ]
+  },
+  "services": {
+    "heading": "Our Specialties",
+    "typicalInvestment": "Typical investment:",
+    "kitchens": {
+      "title": "Kitchen Remodeling",
+      "description": "Comprehensive design from space layout to final finishes. Quartz, custom cabinetry, and integrated appliances.",
+      "link": "View kitchen projects",
+      "range": "$30k – $120k"
+    },
+    "bathrooms": {
+      "title": "Bathroom Renovation",
+      "description": "We transform standard bathrooms into residential spa experiences. Walk-in showers, floating vanities, and luxury fixtures.",
+      "link": "View bathroom projects",
+      "range": "$15k – $65k"
+    },
+    "decks": {
+      "title": "Deck Construction",
+      "description": "Home extensions outdoors with 25-year Trex materials, cedar pergolas, and integrated LED lighting.",
+      "link": "View deck projects",
+      "range": "$25k – $80k"
+    }
+  },
+  "portfolio": {
+    "heading": "Engineering in Action",
+    "subtext": "Drag the slider to compare before and after."
+  },
+  "testimonials": {
+    "heading": "What Our Clients Say",
+    "items": [
+      {
+        "quote": "The kitchen surpassed everything we had imagined. The process was impeccable — exact price to budget and they finished 4 days early.",
+        "author": "Carolina H.",
+        "location": "Buckhead, Atlanta",
+        "project": "Kitchen · $64,000"
+      },
+      {
+        "quote": "I never thought a bathroom could change our quality of life like this. Five stars are not enough to describe the result.",
+        "author": "Michael W.",
+        "location": "Sandy Springs, Atlanta",
+        "project": "Master Bathroom · $36,000"
+      },
+      {
+        "quote": "We contracted the deck a year ago. Zero maintenance, looks exactly like the first day. Worth every penny.",
+        "author": "Robert J.",
+        "location": "Alpharetta, Atlanta",
+        "project": "Trex Deck · $42,000"
+      }
+    ]
+  },
+  "cta": {
+    "eyebrow": "Limited Availability · Atlanta, GA",
+    "title": "Your project deserves",
+    "titleAccent": "the right precision.",
+    "description": "Request your project evaluation. A specialist will analyze the structural viability of your remodel before committing a single dollar of your investment.",
+    "pricingNote": "Structural evaluation from $500 · 3D Design from $1,500",
+    "button": "Request Project Evaluation"
+  },
+  "funnel": {
+    "eyebrow": "Atlanta, GA · Limited Availability",
+    "title": "Request Your Project",
+    "titleAccent": "Evaluation",
+    "description": "Our process starts with a deep structural evaluation ($500) or a specialized 3D design visit ($1,500) to ensure your investment is calculated to the millimeter before demolition.",
+    "trust": {
+      "protected": { "label": "Protected Information", "description": "Your data is never shared with third parties." },
+      "response": { "label": "24h Response", "description": "A specialist will confirm availability." },
+      "noCommitment": { "label": "No Initial Commitment", "description": "Verifying availability creates no obligation." }
+    },
+    "legal": "JC Milian Construction operates exclusively in the Atlanta, GA metropolitan area. Availability is subject to the specialist team's schedule."
+  },
+  "funnelEngine": {
+    "step1": {
+      "counter": "Step 1 of 4",
+      "question": "What type of project do you have in mind?",
+      "options": {
+        "cocina": { "label": "Kitchen", "description": "Full or partial remodel" },
+        "bano": { "label": "Bathroom", "description": "Primary or guest bathroom" },
+        "deck": { "label": "Deck / Patio", "description": "Exterior construction or renovation" },
+        "otro": { "label": "Other project", "description": "Tell us about your idea" }
+      }
+    },
+    "step2": {
+      "counter": "Step 2 of 4",
+      "question": "What is your investment range?",
+      "subtitle": "This information is confidential and helps us prepare the right proposal.",
+      "options": {
+        "under_15k": { "label": "Less than $15,000", "description": "Limited scope project" },
+        "15k_30k": { "label": "$15,000 – $30,000", "description": "Partial remodel" },
+        "30k_60k": { "label": "$30,000 – $60,000", "description": "Full standard remodel" },
+        "60k_100k": { "label": "$60,000 – $100,000", "description": "Full premium remodel" },
+        "over_100k": { "label": "Over $100,000", "description": "Full luxury project" }
+      }
+    },
+    "step3": {
+      "counter": "Step 3 of 4",
+      "question": "Are you interested in financing?",
+      "subtitle": "We offer financing from 5.9% APR. Checking does not affect your credit.",
+      "options": {
+        "yes": { "label": "Yes, I'm interested", "description": "I want to explore financing options" },
+        "maybe": { "label": "Maybe", "description": "Depends on available conditions" },
+        "no": { "label": "No, paying directly", "description": "I have the budget available" }
+      }
+    },
+    "step4": {
+      "counter": "Step 4 of 4",
+      "question": "How do we contact you?",
+      "subtitle": "A specialist will contact you within 24 hours.",
+      "fields": { "name": "Full name", "email": "Email address", "phone": "Phone", "city": "City / Area" },
+      "placeholders": { "name": "Maria Garcia", "email": "maria@example.com", "phone": "(404) 555-0000", "city": "Buckhead, Atlanta" }
+    },
+    "success": {
+      "title": "Request received",
+      "body": "A JC Milian specialist will contact you in the next 24 hours to coordinate your evaluation.",
+      "highlights": [
+        { "label": "Confidential", "sub": "Your data is protected" },
+        { "label": "24 hours", "sub": "Maximum response time" },
+        { "label": "No cost", "sub": "The consultation is free" }
+      ]
+    },
+    "buttons": {
+      "back": "Back",
+      "continue": "Continue",
+      "submit": "Submit Request",
+      "submitting": "Submitting..."
+    },
+    "stepCounter": "of 4 · Confidential and free consultation"
+  },
+  "silos": {
+    "kitchens": {
+      "eyebrow": "Kitchens · Atlanta, GA",
+      "headline": "The Heart of Your Legacy.",
+      "subtext": "We restructure spaces. From hidden beams to Calacatta marble, we build kitchens in Atlanta designed to impress.",
+      "stats": [
+        { "value": "$45k", "label": "average investment" },
+        { "value": "340+", "label": "completed kitchens" },
+        { "value": "9.8/10", "label": "client satisfaction" }
+      ],
+      "ctaTitle": "Is Your Kitchen Ready to Transform?",
+      "ctaText": "We start with a deep structural evaluation ($500) or a 3D design visit ($1,500) so your investment is calculated to the millimeter before demolition.",
+      "ctaButton": "Request Project Evaluation"
+    },
+    "bathrooms": {
+      "eyebrow": "Bathrooms · Atlanta, GA",
+      "headline": "Your Private Sanctuary.",
+      "subtext": "Precision hydraulic engineering and minimalist design for a spa experience in your own home.",
+      "stats": [
+        { "value": "$32k", "label": "average investment" },
+        { "value": "5+", "label": "bathrooms per month" },
+        { "value": "5★", "label": "Google rating" }
+      ],
+      "ctaTitle": "Is Your Bathroom Ready to Become a Ritual?",
+      "ctaText": "We start with a deep structural evaluation ($500) or a 3D design visit ($1,500) so your investment is calculated to the millimeter before demolition.",
+      "ctaButton": "Request Project Evaluation"
+    },
+    "decks": {
+      "eyebrow": "Decks & Exteriors · Atlanta, GA",
+      "headline": "Luxury Without Walls.",
+      "subtext": "We extend the elegance of your interior. Structurally superior decks that defy climate and time.",
+      "stats": [
+        { "value": "25 yr", "label": "Trex Transcend warranty" },
+        { "value": "480+", "label": "average sq ft" },
+        { "value": "5★", "label": "Google rating" }
+      ],
+      "ctaTitle": "Is Your Exterior Ready for the Next Level?",
+      "ctaText": "We start with a deep structural evaluation ($500) or a 3D design visit ($1,500) so your investment is calculated to the millimeter before building.",
+      "ctaButton": "Request Project Evaluation"
+    }
+  },
+  "riskReversal": {
+    "heading": "Operational Transparency",
+    "subheading": "Each project is backed by real contractual guarantees. Not promises — clauses with legal consequences.",
+    "guarantees": [
+      {
+        "id": "final-price",
+        "title": "Guaranteed Final Price",
+        "subtitle": "No hidden costs",
+        "body": "The signed budget is the final project price. No additional charge can be applied without written approval and a contract amendment signed by both parties.",
+        "legalNote": "Reference: Clause 4.2 of the JC Milian standard contract"
+      },
+      {
+        "id": "warranty",
+        "title": "2-Year Workmanship Warranty",
+        "subtitle": "Certified labor",
+        "body": "All work performed by JC Milian is warranted for 24 months from the delivery date. Installation defects are corrected at no additional cost.",
+        "legalNote": "Coverage limited to execution defects, not natural wear from use"
+      },
+      {
+        "id": "schedule",
+        "title": "Binding Schedule",
+        "subtitle": "With penalty clause",
+        "body": "Project start and delivery dates are contractually binding. Delays attributable to the contractor activate a daily compensation established in the contract.",
+        "legalNote": "Clause 7.1 — $150/day compensation for unjustified contractor delay"
+      }
+    ]
+  },
+  "languageSwitcher": { "label": "Español", "current": "EN" },
+  "caseStudyCard": {
+    "categories": {
+      "cocina": "Kitchen Remodeling",
+      "bano": "Bathroom Renovation",
+      "deck": "Deck Construction"
+    },
+    "challenge": "The Challenge",
+    "solution": "The Solution",
+    "before": "Before",
+    "after": "After",
+    "duration": "Duration",
+    "weeks": "weeks",
+    "investment": "Investment",
+    "financing": "Financing",
+    "financingAvailable": "Available",
+    "financingFrom": "From",
+    "financingPerMonth": "/mo*",
+    "financingNote": "*Estimated at 5.9% APR / 60 months. Subject to credit approval. Not a financing offer."
+  }
+}

@@ -1,0 +1,238 @@
+{
+  "navigation": {
+    "kitchens": "Remodelación de Cocinas",
+    "bathrooms": "Remodelación de Baños",
+    "decks": "Construcción de Decks",
+    "evaluate": "Evaluar mi Proyecto",
+    "callUs": "Llámanos"
+  },
+  "hero": {
+    "eyebrow": "Atlanta, GA · 15+ Años · 340+ Proyectos",
+    "h1Line1": "Arquitectura y",
+    "h1Line2": "Construcción que",
+    "h1Line3": "Elevan tu Legado.",
+    "subtext": "Remodelación high-end en Atlanta. Cocinas, baños y decks de $30k a $150k construidos con precisión milimétrica, precio garantizado y cronograma vinculante.",
+    "ctaPrimary": "Solicitar Evaluación",
+    "ctaSecondary": "Ver Proyectos",
+    "stats": [
+      { "value": "340+", "label": "Proyectos completados" },
+      { "value": "$2M+", "label": "En remodelaciones" },
+      { "value": "100%", "label": "Precio garantizado" },
+      { "value": "2 años", "label": "Garantía de obra" }
+    ]
+  },
+  "services": {
+    "heading": "Nuestras Especialidades",
+    "typicalInvestment": "Inversión típica:",
+    "kitchens": {
+      "title": "Remodelación de Cocinas",
+      "description": "Diseño integral desde la distribución del espacio hasta los acabados finales. Quartz, gabinetes de ebanistería y electrodomésticos integrados.",
+      "link": "Ver proyectos de cocinas",
+      "range": "$30k – $120k"
+    },
+    "bathrooms": {
+      "title": "Renovación de Baños",
+      "description": "Transformamos baños estándar en experiencias spa residenciales. Duchas walk-in, vanidades flotantes y grifería de lujo.",
+      "link": "Ver proyectos de baños",
+      "range": "$15k – $65k"
+    },
+    "decks": {
+      "title": "Construcción de Decks",
+      "description": "Extensiones del hogar al exterior con materiales Trex de 25 años de garantía, pérgolas de cedro e iluminación LED integrada.",
+      "link": "Ver proyectos de decks",
+      "range": "$25k – $80k"
+    }
+  },
+  "portfolio": {
+    "heading": "Ingeniería en Acción",
+    "subtext": "Arrastra el divisor para comparar el antes y el después."
+  },
+  "testimonials": {
+    "heading": "Lo que dicen nuestros clientes",
+    "items": [
+      {
+        "quote": "La cocina superó todo lo que habíamos imaginado. El proceso fue impecable — precio exacto al presupuesto y terminaron 4 días antes.",
+        "author": "Carolina H.",
+        "location": "Buckhead, Atlanta",
+        "project": "Cocina · $64,000"
+      },
+      {
+        "quote": "Nunca pensé que un baño podría cambiar así nuestra calidad de vida. Cinco estrellas no son suficientes para describir el resultado.",
+        "author": "Michael W.",
+        "location": "Sandy Springs, Atlanta",
+        "project": "Baño Principal · $36,000"
+      },
+      {
+        "quote": "Contratamos el deck hace un año. Cero mantenimiento, se ve exactamente igual que el primer día. Vale hasta el último centavo.",
+        "author": "Robert J.",
+        "location": "Alpharetta, Atlanta",
+        "project": "Deck Trex · $42,000"
+      }
+    ]
+  },
+  "cta": {
+    "eyebrow": "Disponibilidad Limitada · Atlanta, GA",
+    "title": "Tu proyecto merece",
+    "titleAccent": "la precisión correcta.",
+    "description": "Solicita tu evaluación de proyecto. Un especialista analizará la viabilidad estructural de tu remodelación antes de comprometer un solo dólar de tu inversión.",
+    "pricingNote": "Evaluación estructural desde $500 · Diseño 3D desde $1,500",
+    "button": "Solicitar Evaluación de Proyecto"
+  },
+  "funnel": {
+    "eyebrow": "Atlanta, GA · Disponibilidad Limitada",
+    "title": "Solicita tu Evaluación",
+    "titleAccent": "de Proyecto",
+    "description": "Nuestro proceso inicia con una evaluación estructural profunda ($500) o una visita especializada de diseño 3D ($1,500) para garantizar que tu inversión esté calculada al milímetro antes de demoler.",
+    "trust": {
+      "protected": { "label": "Información Protegida", "description": "Tus datos nunca se comparten con terceros." },
+      "response": { "label": "Respuesta en 24 h", "description": "Un especialista confirmará disponibilidad." },
+      "noCommitment": { "label": "Sin Compromiso Inicial", "description": "Verificar disponibilidad no genera obligación." }
+    },
+    "legal": "JC Milian Construction opera exclusivamente en el área metropolitana de Atlanta, GA. La disponibilidad está sujeta a la agenda del equipo de especialistas."
+  },
+  "funnelEngine": {
+    "step1": {
+      "counter": "Paso 1 de 4",
+      "question": "¿Qué tipo de proyecto tienes en mente?",
+      "options": {
+        "cocina": { "label": "Cocina", "description": "Remodelación completa o parcial" },
+        "bano": { "label": "Baño", "description": "Baño principal o de visitas" },
+        "deck": { "label": "Deck / Patio", "description": "Construcción o renovación exterior" },
+        "otro": { "label": "Otro proyecto", "description": "Cuéntanos sobre tu idea" }
+      }
+    },
+    "step2": {
+      "counter": "Paso 2 de 4",
+      "question": "¿Cuál es tu rango de inversión?",
+      "subtitle": "Esta información es confidencial y nos ayuda a preparar la propuesta correcta.",
+      "options": {
+        "under_15k": { "label": "Menos de $15,000", "description": "Proyecto de alcance limitado" },
+        "15k_30k": { "label": "$15,000 – $30,000", "description": "Remodelación parcial" },
+        "30k_60k": { "label": "$30,000 – $60,000", "description": "Remodelación completa estándar" },
+        "60k_100k": { "label": "$60,000 – $100,000", "description": "Remodelación completa premium" },
+        "over_100k": { "label": "Más de $100,000", "description": "Proyecto de lujo integral" }
+      }
+    },
+    "step3": {
+      "counter": "Paso 3 de 4",
+      "question": "¿Te interesa el financiamiento?",
+      "subtitle": "Ofrecemos financiamiento desde 5.9% APR. No afecta tu crédito consultar.",
+      "options": {
+        "yes": { "label": "Sí, me interesa", "description": "Quiero explorar opciones de financiamiento" },
+        "maybe": { "label": "Quizás", "description": "Depende de las condiciones disponibles" },
+        "no": { "label": "No, pago directo", "description": "Tengo el presupuesto disponible" }
+      }
+    },
+    "step4": {
+      "counter": "Paso 4 de 4",
+      "question": "¿Cómo te contactamos?",
+      "subtitle": "Un especialista se comunicará contigo en menos de 24 horas.",
+      "fields": { "name": "Nombre completo", "email": "Correo electrónico", "phone": "Teléfono", "city": "Ciudad / Área" },
+      "placeholders": { "name": "María García", "email": "maria@ejemplo.com", "phone": "(404) 555-0000", "city": "Buckhead, Atlanta" }
+    },
+    "success": {
+      "title": "Solicitud recibida",
+      "body": "Un especialista de JC Milian se comunicará contigo en las próximas 24 horas para coordinar tu evaluación.",
+      "highlights": [
+        { "label": "Confidencial", "sub": "Tus datos están protegidos" },
+        { "label": "24 horas", "sub": "Tiempo máximo de respuesta" },
+        { "label": "Sin costo", "sub": "La consulta es gratuita" }
+      ]
+    },
+    "buttons": {
+      "back": "Atrás",
+      "continue": "Continuar",
+      "submit": "Enviar solicitud",
+      "submitting": "Enviando…"
+    },
+    "stepCounter": "de 4 · Consulta confidencial y sin costo"
+  },
+  "silos": {
+    "kitchens": {
+      "eyebrow": "Cocinas · Atlanta, GA",
+      "headline": "El Corazón de tu Legado.",
+      "subtext": "Reestructuramos espacios. Desde vigas ocultas hasta mármol Calacatta, construimos cocinas en Atlanta diseñadas para deslumbrar.",
+      "stats": [
+        { "value": "$45k", "label": "inversión promedio" },
+        { "value": "340+", "label": "cocinas completadas" },
+        { "value": "9.8/10", "label": "satisfacción de clientes" }
+      ],
+      "ctaTitle": "¿Lista tu cocina para transformarse?",
+      "ctaText": "Iniciamos con una evaluación estructural profunda ($500) o una visita de diseño 3D ($1,500) para que tu inversión esté calculada al milímetro antes de demoler.",
+      "ctaButton": "Solicitar Evaluación de Proyecto"
+    },
+    "bathrooms": {
+      "eyebrow": "Baños · Atlanta, GA",
+      "headline": "Tu Santuario Privado.",
+      "subtext": "Ingeniería hidráulica de precisión y diseño minimalista para una experiencia Spa en tu propio hogar.",
+      "stats": [
+        { "value": "$32k", "label": "inversión promedio" },
+        { "value": "5+", "label": "baños por mes" },
+        { "value": "5★", "label": "calificación Google" }
+      ],
+      "ctaTitle": "¿Listo tu baño para convertirse en ritual?",
+      "ctaText": "Iniciamos con una evaluación estructural profunda ($500) o una visita de diseño 3D ($1,500) para que tu inversión esté calculada al milímetro antes de demoler.",
+      "ctaButton": "Solicitar Evaluación de Proyecto"
+    },
+    "decks": {
+      "eyebrow": "Decks & Exteriores · Atlanta, GA",
+      "headline": "El Lujo sin Paredes.",
+      "subtext": "Extendemos la elegancia de tu interior. Decks estructuralmente superiores que desafían el clima y el tiempo.",
+      "stats": [
+        { "value": "25 yr", "label": "garantía Trex Transcend" },
+        { "value": "480+", "label": "sq ft promedio" },
+        { "value": "5★", "label": "calificación Google" }
+      ],
+      "ctaTitle": "¿Listo tu exterior para el siguiente nivel?",
+      "ctaText": "Iniciamos con una evaluación estructural profunda ($500) o una visita de diseño 3D ($1,500) para que tu inversión esté calculada al milímetro antes de construir.",
+      "ctaButton": "Solicitar Evaluación de Proyecto"
+    }
+  },
+  "riskReversal": {
+    "heading": "Transparencia Operativa",
+    "subheading": "Cada proyecto está respaldado por garantías contractuales reales. No promesas — cláusulas con consecuencias legales.",
+    "guarantees": [
+      {
+        "id": "precio-final",
+        "title": "Precio Final Garantizado",
+        "subtitle": "Sin costos ocultos",
+        "body": "El presupuesto firmado es el precio final del proyecto. Ningún cargo adicional puede aplicarse sin aprobación escrita y enmienda contractual firmada por ambas partes.",
+        "legalNote": "Referencia: Cláusula 4.2 del contrato estándar JC Milian"
+      },
+      {
+        "id": "garantia-obra",
+        "title": "Garantía de Obra: 2 Años",
+        "subtitle": "Mano de obra certificada",
+        "body": "Toda la mano de obra ejecutada por JC Milian queda garantizada por 24 meses desde la fecha de entrega. Defectos de instalación son corregidos sin costo adicional alguno.",
+        "legalNote": "Cobertura limitada a defectos de ejecución, no a desgaste natural por uso"
+      },
+      {
+        "id": "cronograma",
+        "title": "Cronograma Vinculante",
+        "subtitle": "Con cláusula de penalidad",
+        "body": "Las fechas de inicio y entrega del proyecto son contractualmente vinculantes. Retrasos atribuibles al contratista activan una compensación diaria establecida en contrato.",
+        "legalNote": "Cláusula 7.1 — Compensación de $150/día por retraso injustificado del contratista"
+      }
+    ]
+  },
+  "languageSwitcher": { "label": "English", "current": "ES" },
+  "caseStudyCard": {
+    "categories": {
+      "cocina": "Remodelación de Cocina",
+      "bano": "Remodelación de Baño",
+      "deck": "Construcción de Deck"
+    },
+    "challenge": "El Reto",
+    "solution": "La Solución",
+    "before": "Antes",
+    "after": "Después",
+    "duration": "Duración",
+    "weeks": "semanas",
+    "investment": "Inversión",
+    "financing": "Financiamiento",
+    "financingAvailable": "Disponible",
+    "financingFrom": "Desde",
+    "financingPerMonth": "/mes*",
+    "financingNote": "*Estimado basado en 5.9% APR / 60 meses. Sujeto a aprobación de crédito. No constituye oferta de financiamiento."
+  }
+}
