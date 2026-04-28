@@ -34,3 +34,5 @@ next-env.d.ts
 # video assets (too large for git)
 public/video/
 *.mp4
+
+.vercel
