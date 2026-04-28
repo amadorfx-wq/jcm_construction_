@@ -156,15 +156,18 @@ export default function VideoHero({ locale, dict }: VideoHeroProps) {
       >
         <video
           ref={videoRef}
-          className="hero-video"
+          className="absolute top-0 left-0 w-full h-full object-cover z-0"
           autoPlay
           muted
           loop
           playsInline
-          preload="auto"
-          onCanPlay={() => setLoaded(true)}
+          onLoadedData={() => setLoaded(true)}
+          style={{ 
+            transform: `translateY(${scrollY * 0.4}px)`,
+            willChange: 'transform'
+          }}
         >
-          <source src="/video/hero-construction.mp4" type="video/mp4" />
+          <source src="https://w0zeq6hx1v1mlnrk.public.blob.vercel-storage.com/hero-construction.mp4" type="video/mp4" />
         </video>
       </div>
 
