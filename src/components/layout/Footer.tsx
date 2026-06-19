@@ -17,6 +17,8 @@ interface FooterDict {
     bathrooms: string;
     decks: string;
     estimate: string;
+    privacy: string;
+    terms: string;
   };
 }
 
@@ -31,6 +33,8 @@ export default function Footer({ dict, locale }: FooterProps) {
     { label: dict.links.bathrooms, href: getLocalizedHref('bathrooms', locale) },
     { label: dict.links.decks,     href: getLocalizedHref('decks',     locale) },
     { label: dict.links.estimate,  href: getLocalizedHref('estimate',  locale) },
+    { label: dict.links.privacy,   href: `/${locale}/privacy-policy` },
+    { label: dict.links.terms,     href: `/${locale}/terms` },
   ];
 
   return (

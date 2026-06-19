@@ -123,8 +123,10 @@
         "no": "No, paying directly"
       },
       "consentSms": {
-        "text": "I agree to receive SMS messages from JC Milian Construction about my estimate request. Message & data rates may apply. Reply STOP to opt out.",
-        "error": "You must agree to receive SMS messages to continue."
+        "text": "By checking this box, I agree to receive SMS messages from JC Milian Construction, including estimate follow-ups, appointment reminders, and project updates. Message frequency varies. Message & data rates may apply. Reply STOP to opt out or HELP for help.",
+        "error": "You must agree to receive SMS messages to continue.",
+        "privacyLink": "Privacy Policy",
+        "termsLink": "Terms & Conditions"
       }
     },
     "trustBadges": ["Free", "No commitment", "We respond in 15 min"],
@@ -247,7 +249,9 @@
       "kitchens": "Kitchen Remodeling",
       "bathrooms": "Bathroom Renovation",
       "decks": "Deck Construction",
-      "estimate": "Free Estimate"
+      "estimate": "Free Estimate",
+      "privacy": "Privacy Policy",
+      "terms": "Terms & Conditions"
     }
   }
 }

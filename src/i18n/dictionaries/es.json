@@ -123,8 +123,10 @@
         "no": "No, pago directo"
       },
       "consentSms": {
-        "text": "Acepto recibir mensajes SMS de JC Milian Construction sobre mi solicitud de presupuesto. Pueden aplicar tarifas de mensajes y datos. Responde STOP para cancelar.",
-        "error": "Debes aceptar recibir mensajes SMS para continuar."
+        "text": "Al marcar esta casilla, acepto recibir mensajes SMS de JC Milian Construction, incluyendo seguimiento de presupuestos, recordatorios de citas y actualizaciones de proyectos. La frecuencia de mensajes varía. Pueden aplicar tarifas de mensajes y datos. Responde STOP para cancelar o HELP para ayuda.",
+        "error": "Debes aceptar recibir mensajes SMS para continuar.",
+        "privacyLink": "Política de Privacidad",
+        "termsLink": "Términos y Condiciones"
       }
     },
     "trustBadges": ["Gratis", "Sin compromiso", "Respondemos en 15 min"],
@@ -247,7 +249,9 @@
       "kitchens": "Remodelación de Cocinas",
       "bathrooms": "Renovación de Baños",
       "decks": "Construcción de Decks",
-      "estimate": "Cotización Gratis"
+      "estimate": "Cotización Gratis",
+      "privacy": "Política de Privacidad",
+      "terms": "Términos y Condiciones"
     }
   }
 }

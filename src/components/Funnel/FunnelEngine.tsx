@@ -7,6 +7,8 @@
 // ─────────────────────────────────────────────────────────────────────────────
 
 import { useState, useTransition } from 'react';
+import { useParams } from 'next/navigation';
+import Link from 'next/link';
 import { useFunnelStore, selectIsSubmitted } from '@/store/useFunnelStore';
 import { leadFormSchema } from '@/lib/validations/leadSchema';
 import { submitLead } from '@/actions/submitLead';
@@ -43,6 +45,8 @@ interface FunnelEngineDict {
     consentSms: {
       text: string;
       error: string;
+      privacyLink: string;
+      termsLink: string;
     };
   };
   trustBadges: string[];
@@ -92,6 +96,9 @@ function SuccessScreen({ success }: { success: FunnelEngineDict['success'] }) {
 // ─── Componente Principal ─────────────────────────────────────────────────────
 
 export default function FunnelEngine({ dict }: FunnelEngineProps) {
+  const params = useParams();
+  const locale = (params?.locale as string) || 'en';
+
   const isSubmitted    = useFunnelStore(selectIsSubmitted);
   const updateLeadData = useFunnelStore((s) => s.updateLeadData);
   const setSubmitted   = useFunnelStore((s) => s.setSubmitted);
@@ -327,6 +334,18 @@ export default function FunnelEngine({ dict }: FunnelEngineProps) {
               {dict.form.consentSms.text}
             </span>
           </label>
+
+          {/* Links a políticas (Requerimiento de portabilidad carrier: fuera del label clickable del checkbox) */}
+          <div className="pl-7 text-[11px] text-slate-400 font-inter flex gap-2 items-center">
+            <Link href={`/${locale}/privacy-policy`} className="hover:text-rose-600 underline transition-colors">
+              {dict.form.consentSms.privacyLink}
+            </Link>
+            <span aria-hidden="true" className="text-slate-300">•</span>
+            <Link href={`/${locale}/terms`} className="hover:text-rose-600 underline transition-colors">
+              {dict.form.consentSms.termsLink}
+            </Link>
+          </div>
+
           {errors.consentSms && (
             <p className="text-xs text-rose-600 font-inter" role="alert">{errors.consentSms}</p>
           )}
