@@ -172,6 +172,18 @@ function buildLeadEmailHtml(lead: z.output<typeof inboundLeadSchema>): string {
 // ─── Server Action ────────────────────────────────────────────────────────────
 
 export async function submitLead(rawPayload: unknown): Promise<SubmitLeadResult> {
+  // 0. Validar consentimiento de SMS antes que cualquier otra cosa (defensa en profundidad)
+  if (
+    typeof rawPayload !== 'object' ||
+    rawPayload === null ||
+    (rawPayload as Record<string, any>).consentSms !== true
+  ) {
+    return {
+      success: false,
+      message: 'El consentimiento de SMS es obligatorio para continuar.',
+    };
+  }
+
   // 1. Validar payload con honeypot
   const parseResult = serverPayloadSchema.safeParse(rawPayload);
   if (!parseResult.success) {

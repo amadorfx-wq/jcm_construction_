@@ -128,6 +128,11 @@ export default function FunnelEngine({ dict }: FunnelEngineProps) {
   // ─── Submit ───────────────────────────────────────────────────────────────
 
   const handleSubmit = () => {
+    if (formData.consentSms !== true) {
+      setErrors((p) => ({ ...p, consentSms: dict.form.consentSms.error }));
+      return;
+    }
+
     const result = leadFormSchema.safeParse(formData);
 
     if (!result.success) {
