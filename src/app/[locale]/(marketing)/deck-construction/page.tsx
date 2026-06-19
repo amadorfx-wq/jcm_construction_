@@ -1,14 +1,16 @@
 // ─────────────────────────────────────────────────────────────────────────────
-// [locale] Silo: Remodelación de Baños — Server Component
+// [locale] Silo: Deck Construction — Server Component
 // ─────────────────────────────────────────────────────────────────────────────
 
 import type { Metadata } from 'next';
+import Image from 'next/image';
 import Link from 'next/link';
 import CaseStudyCard from '@/components/Portfolio/CaseStudyCard';
 import RiskReversal from '@/components/Trust/RiskReversal';
 import { getProjectsByType } from '@/lib/data/portfolio';
 import { getDictionary } from '@/i18n/getDictionary';
 import type { Locale } from '@/i18n/config';
+import { getLocalizedHref } from '@/i18n/routes';
 
 export async function generateMetadata({
   params,
@@ -19,37 +21,57 @@ export async function generateMetadata({
   const isEs = locale === 'es';
   return {
     title: isEs
-      ? 'Remodelación de Baños de Lujo | JC Milian Construction'
-      : 'Luxury Bathroom Remodeling | JC Milian Construction',
+      ? 'Construcción de Decks y Exteriores | JC Milian Construction'
+      : 'Deck & Exterior Construction | JC Milian Construction',
     description: isEs
-      ? 'Baños spa residenciales en Atlanta, GA. Mármol Bianco Carrara, griferías Kohler, calefacción radiante.'
-      : 'Residential spa bathrooms in Atlanta, GA. Bianco Carrara marble, Kohler fixtures, radiant heating.',
+      ? 'Decks de lujo en Atlanta, GA. Trex Transcend con garantía 25 años, pérgolas de cedro, iluminación LED.'
+      : 'Luxury decks in Atlanta, GA. Trex Transcend with 25-year warranty, cedar pergolas, LED lighting.',
   };
 }
 
-export default async function RemodelacionBanosPage({
+export default async function DeckConstructionPage({
   params,
 }: {
   params: Promise<{ locale: string }>;
 }) {
   const { locale } = await params;
   const dict = await getDictionary(locale as Locale);
-  const silo = dict.silos.bathrooms;
-  const project = getProjectsByType('bano', locale)[0];
+  const silo = dict.silos.decks;
+  const project = getProjectsByType('deck', locale)[0];
 
   return (
     <main>
       {/* ── Hero Dark ─────────────────────────────────────────────────────── */}
-      <section className="relative bg-[#0a0a0c] py-32 overflow-hidden">
-        <div
-          className="pointer-events-none absolute inset-0"
-          style={{ background: 'radial-gradient(ellipse 60% 50% at 50% 0%, rgba(190,18,60,0.07) 0%, transparent 70%)' }}
-          aria-hidden="true"
+      <section className="relative bg-[#0a0a0c] min-h-[75vh] py-32 overflow-hidden flex items-center">
+        {/* Background image — above fold, priority preload */}
+        <Image
+          src="/deckhero.png"
+          alt=""
+          fill
+          priority
+          className="object-cover object-center"
+          sizes="100vw"
+          quality={85}
         />
-        <div className="relative max-w-5xl mx-auto px-6 text-center">
+        {/* Cinematic Obsidian overlay */}
+        <div
+          aria-hidden="true"
+          className="absolute inset-0 z-10 pointer-events-none"
+          style={{
+            background: 'linear-gradient(180deg, rgba(10,10,12,0.75) 0%, rgba(10,10,12,0.60) 40%, rgba(10,10,12,0.78) 100%)',
+          }}
+        />
+        {/* Rose accent radial */}
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0 z-10"
+          style={{ background: 'radial-gradient(ellipse 60% 50% at 50% 0%, rgba(190,18,60,0.08) 0%, transparent 70%)' }}
+        />
+        {/* Content */}
+        <div className="relative z-20 w-full max-w-5xl mx-auto px-6 text-center">
           <div className="flex items-center justify-center gap-3 mb-8">
             <span className="block w-8 h-px bg-rose-600 flex-shrink-0" aria-hidden="true" />
-            <span className="text-xs text-rose-700 uppercase tracking-widest font-medium font-inter">
+            <span className="text-xs text-rose-500 uppercase tracking-widest font-medium font-inter">
               {silo.eyebrow}
             </span>
             <span className="block w-8 h-px bg-rose-600 flex-shrink-0" aria-hidden="true" />
@@ -57,14 +79,14 @@ export default async function RemodelacionBanosPage({
           <h1 className="font-playfair text-5xl md:text-7xl font-semibold text-white leading-tight mb-8">
             {silo.headline}
           </h1>
-          <p className="text-gray-400 font-inter text-lg leading-relaxed max-w-2xl mx-auto mb-12">
+          <p className="text-slate-300 font-inter text-lg leading-relaxed max-w-2xl mx-auto mb-12">
             {silo.subtext}
           </p>
           <div className="grid grid-cols-3 gap-8 max-w-xl mx-auto">
             {silo.stats.map(({ value, label }) => (
               <div key={label} className="text-center">
                 <p className="font-playfair text-3xl font-semibold text-white">{value}</p>
-                <p className="text-[11px] text-slate-500 uppercase tracking-wider font-inter mt-1">{label}</p>
+                <p className="text-[11px] text-slate-400 uppercase tracking-wider font-inter mt-1">{label}</p>
               </div>
             ))}
           </div>
@@ -92,11 +114,14 @@ export default async function RemodelacionBanosPage({
             {silo.ctaText}
           </p>
           <Link
-            href={`/${locale}/evaluacion-proyecto`}
+            href={getLocalizedHref('estimate', locale)}
             className="inline-block bg-[#0a0a0c] text-white font-inter text-sm font-medium px-10 py-4 rounded-sm hover:bg-slate-800 transition-colors duration-200 tracking-wide"
           >
             {silo.ctaButton}
           </Link>
+          <p className="text-sm text-slate-400 mt-4 text-center font-inter">
+            {silo.financingAnchor}
+          </p>
         </div>
       </section>
     </main>

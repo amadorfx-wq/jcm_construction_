@@ -2,290 +2,66 @@
 
 // ─────────────────────────────────────────────────────────────────────────────
 // FunnelEngine — Client Component
-// Recibe dict del Server Page. Cero texto hardcodeado.
-// Motor de captación multi-paso. Máquina registradora del negocio.
+// Formulario único de alta conversión. Estado local, submit con Zod + Server Action.
+// Mobile-First. Touch cards. Cero código multipaso.
 // ─────────────────────────────────────────────────────────────────────────────
 
 import { useState, useTransition } from 'react';
-import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
-import {
-  useFunnelStore,
-  selectCurrentStep,
-  selectCurrentStepIndex,
-  selectProgressPercentage,
-  selectIsFirstStep,
-  selectIsLastStep,
-  selectIsSubmitted,
-} from '@/store/useFunnelStore';
-import { stepSchemaRegistry } from '@/lib/validations/leadSchema';
+import { useFunnelStore, selectIsSubmitted } from '@/store/useFunnelStore';
+import { leadFormSchema } from '@/lib/validations/leadSchema';
 import { submitLead } from '@/actions/submitLead';
-import type {
-  ProjectType,
-  BudgetRange,
-  FinancingIntent,
-  ContactInfo,
-  FunnelStep,
-} from '@/types';
+import type { LeadFormData } from '@/types';
 
-// ─── Dict type (inferido desde JSON — no importa server-only) ─────────────────
-
-interface StepOption {
-  label: string;
-  description: string;
-}
+// ─── Dict type ────────────────────────────────────────────────────────────────
 
 interface FunnelEngineDict {
-  step1: {
-    counter: string;
-    question: string;
-    options: { cocina: StepOption; bano: StepOption; deck: StepOption; otro: StepOption };
-  };
-  step2: {
-    counter: string;
+  form: {
     question: string;
     subtitle: string;
-    options: {
-      under_15k: StepOption;
-      '15k_30k': StepOption;
-      '30k_60k': StepOption;
-      '60k_100k': StepOption;
-      over_100k: StepOption;
+    fields: {
+      name: string;
+      phone: string;
+      email: string;
+      projectType: string;
+      financing: string;
+    };
+    placeholders: {
+      name: string;
+      phone: string;
+      email: string;
+    };
+    projectOptions: {
+      cocina: string;
+      bano: string;
+      deck: string;
+      otro: string;
+    };
+    financingOptions: {
+      yes: string;
+      no: string;
+    };
+    consentSms: {
+      text: string;
+      error: string;
     };
   };
-  step3: {
-    counter: string;
-    question: string;
-    subtitle: string;
-    options: { yes: StepOption; maybe: StepOption; no: StepOption };
-  };
-  step4: {
-    counter: string;
-    question: string;
-    subtitle: string;
-    fields: { name: string; email: string; phone: string; city: string };
-    placeholders: { name: string; email: string; phone: string; city: string };
-  };
+  trustBadges: string[];
   success: {
     title: string;
     body: string;
     highlights: Array<{ label: string; sub: string }>;
   };
-  buttons: { back: string; continue: string; submit: string; submitting: string };
-  stepCounter: string;
+  buttons: {
+    getEstimate: string;
+    submitting: string;
+  };
 }
 
-// ─── Variantes de animación — curva iOS nativa ────────────────────────────────
-
-const slideVariants = {
-  enter:  (dir: number) => ({ x: dir * 40, opacity: 0 }),
-  center:              ({ x: 0,          opacity: 1 }),
-  exit:   (dir: number) => ({ x: dir * -40, opacity: 0 }),
-};
-
-const reducedVariants = {
-  enter:  { opacity: 0 },
-  center: { opacity: 1 },
-  exit:   { opacity: 0 },
-};
-
-const iosTransition = {
-  duration: 0.28,
-  ease: [0.16, 1, 0.3, 1] as const,
-};
-
-// ─── Sub-componente: ProgressBar ──────────────────────────────────────────────
-
-function ProgressBar({ percentage }: { percentage: number }) {
-  return (
-    <div className="w-full h-px bg-slate-100" role="progressbar" aria-valuenow={percentage} aria-valuemin={0} aria-valuemax={100}>
-      <div
-        className="h-px bg-rose-600 transition-all duration-500"
-        style={{ width: `${percentage}%` }}
-      />
-    </div>
-  );
+interface FunnelEngineProps {
+  dict: FunnelEngineDict;
 }
 
-// ─── Sub-componente: SelectionCard ────────────────────────────────────────────
-
-interface SelectionCardProps {
-  label: string;
-  description: string;
-  selected: boolean;
-  onSelect: () => void;
-}
-
-function SelectionCard({ label, description, selected, onSelect }: SelectionCardProps) {
-  return (
-    <button
-      type="button"
-      onClick={onSelect}
-      className={[
-        'flex items-start gap-4 w-full text-left px-5 py-4 rounded-sm border',
-        'transition-all duration-150 cursor-pointer min-h-[44px]',
-        selected
-          ? 'border-rose-700 ring-2 ring-rose-700 bg-rose-50/40'
-          : 'border-slate-200 hover:border-slate-300 hover:bg-slate-50',
-      ].join(' ')}
-      aria-pressed={selected}
-    >
-      <span
-        className={[
-          'mt-0.5 flex-shrink-0 w-4 h-4 rounded-full border-2 flex items-center justify-center',
-          selected ? 'border-rose-700' : 'border-slate-300',
-        ].join(' ')}
-        aria-hidden="true"
-      >
-        {selected && <span className="w-2 h-2 rounded-full bg-rose-700" />}
-      </span>
-      <div className="flex flex-col gap-0.5">
-        <span className={['text-sm font-medium', selected ? 'text-slate-900' : 'text-slate-700'].join(' ')}>
-          {label}
-        </span>
-        <span className="text-xs text-slate-400 font-inter leading-snug">{description}</span>
-      </div>
-    </button>
-  );
-}
-
-// ─── Sub-componentes: Pasos ───────────────────────────────────────────────────
-
-function StepProjectType({
-  selected, onSelect, step1,
-}: { selected: ProjectType | null; onSelect: (v: ProjectType) => void; step1: FunnelEngineDict['step1'] }) {
-  const opts: Array<{ value: ProjectType; opt: StepOption }> = [
-    { value: 'cocina', opt: step1.options.cocina },
-    { value: 'bano',   opt: step1.options.bano },
-    { value: 'deck',   opt: step1.options.deck },
-    { value: 'otro',   opt: step1.options.otro },
-  ];
-  return (
-    <div className="flex flex-col gap-3">
-      <div className="mb-2">
-        <p className="text-xs text-rose-700 uppercase tracking-widest font-medium mb-1">{step1.counter}</p>
-        <h2 className="font-playfair text-2xl font-semibold text-slate-900">{step1.question}</h2>
-      </div>
-      {opts.map(({ value, opt }) => (
-        <SelectionCard
-          key={value}
-          label={opt.label}
-          description={opt.description}
-          selected={selected === value}
-          onSelect={() => onSelect(value)}
-        />
-      ))}
-    </div>
-  );
-}
-
-function StepBudgetRange({
-  selected, onSelect, step2,
-}: { selected: BudgetRange | null; onSelect: (v: BudgetRange) => void; step2: FunnelEngineDict['step2'] }) {
-  const opts: Array<{ value: BudgetRange; opt: StepOption }> = [
-    { value: 'under_15k', opt: step2.options.under_15k },
-    { value: '15k_30k',   opt: step2.options['15k_30k'] },
-    { value: '30k_60k',   opt: step2.options['30k_60k'] },
-    { value: '60k_100k',  opt: step2.options['60k_100k'] },
-    { value: 'over_100k', opt: step2.options.over_100k },
-  ];
-  return (
-    <div className="flex flex-col gap-3">
-      <div className="mb-2">
-        <p className="text-xs text-rose-700 uppercase tracking-widest font-medium mb-1">{step2.counter}</p>
-        <h2 className="font-playfair text-2xl font-semibold text-slate-900">{step2.question}</h2>
-        <p className="text-sm text-slate-500 mt-1 font-inter">{step2.subtitle}</p>
-      </div>
-      {opts.map(({ value, opt }) => (
-        <SelectionCard
-          key={value}
-          label={opt.label}
-          description={opt.description}
-          selected={selected === value}
-          onSelect={() => onSelect(value)}
-        />
-      ))}
-    </div>
-  );
-}
-
-function StepFinancing({
-  selected, onSelect, step3,
-}: { selected: FinancingIntent | null; onSelect: (v: FinancingIntent) => void; step3: FunnelEngineDict['step3'] }) {
-  const opts: Array<{ value: FinancingIntent; opt: StepOption }> = [
-    { value: 'yes',   opt: step3.options.yes },
-    { value: 'maybe', opt: step3.options.maybe },
-    { value: 'no',    opt: step3.options.no },
-  ];
-  return (
-    <div className="flex flex-col gap-3">
-      <div className="mb-2">
-        <p className="text-xs text-rose-700 uppercase tracking-widest font-medium mb-1">{step3.counter}</p>
-        <h2 className="font-playfair text-2xl font-semibold text-slate-900">{step3.question}</h2>
-        <p className="text-sm text-slate-500 mt-1 font-inter">{step3.subtitle}</p>
-      </div>
-      {opts.map(({ value, opt }) => (
-        <SelectionCard
-          key={value}
-          label={opt.label}
-          description={opt.description}
-          selected={selected === value}
-          onSelect={() => onSelect(value)}
-        />
-      ))}
-    </div>
-  );
-}
-
-function StepContactInfo({
-  data, onChange, step4,
-}: { data: Partial<ContactInfo>; onChange: (field: keyof ContactInfo, value: string) => void; step4: FunnelEngineDict['step4'] }) {
-  const inputClass = 'w-full px-4 py-3 text-sm border border-slate-200 rounded-sm bg-white text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-rose-700 focus:ring-2 focus:ring-rose-700/20 transition-all duration-150';
-  return (
-    <div className="flex flex-col gap-4">
-      <div className="mb-2">
-        <p className="text-xs text-rose-700 uppercase tracking-widest font-medium mb-1">{step4.counter}</p>
-        <h2 className="font-playfair text-2xl font-semibold text-slate-900">{step4.question}</h2>
-        <p className="text-sm text-slate-500 mt-1 font-inter">{step4.subtitle}</p>
-      </div>
-
-      <div className="flex flex-col gap-1.5">
-        <label htmlFor="contact-name" className="text-sm font-medium text-slate-700">{step4.fields.name}</label>
-        <input
-          id="contact-name" type="text" autoComplete="name"
-          value={data.name ?? ''} onChange={(e) => onChange('name', e.target.value)}
-          placeholder={step4.placeholders.name} className={inputClass}
-        />
-      </div>
-
-      <div className="flex flex-col gap-1.5">
-        <label htmlFor="contact-email" className="text-sm font-medium text-slate-700">{step4.fields.email}</label>
-        <input
-          id="contact-email" type="email" autoComplete="email"
-          value={data.email ?? ''} onChange={(e) => onChange('email', e.target.value)}
-          placeholder={step4.placeholders.email} className={inputClass}
-        />
-      </div>
-
-      <div className="flex flex-col gap-1.5">
-        <label htmlFor="contact-phone" className="text-sm font-medium text-slate-700">{step4.fields.phone}</label>
-        <input
-          id="contact-phone" type="tel" autoComplete="tel"
-          value={data.phone ?? ''} onChange={(e) => onChange('phone', e.target.value)}
-          placeholder={step4.placeholders.phone} className={inputClass}
-        />
-      </div>
-
-      <div className="flex flex-col gap-1.5">
-        <label htmlFor="contact-city" className="text-sm font-medium text-slate-700">{step4.fields.city}</label>
-        <input
-          id="contact-city" type="text" autoComplete="address-level2"
-          value={data.city ?? ''} onChange={(e) => onChange('city', e.target.value)}
-          placeholder={step4.placeholders.city} className={inputClass}
-        />
-      </div>
-    </div>
-  );
-}
+// ─── Sub-componente: SuccessScreen ────────────────────────────────────────────
 
 function SuccessScreen({ success }: { success: FunnelEngineDict['success'] }) {
   return (
@@ -313,205 +89,289 @@ function SuccessScreen({ success }: { success: FunnelEngineDict['success'] }) {
   );
 }
 
-// ─── Helper ───────────────────────────────────────────────────────────────────
-
-function buildStepData(
-  step: FunnelStep,
-  projectType: ProjectType | null,
-  budgetRange: BudgetRange | null,
-  financingIntent: FinancingIntent | null,
-  contact: Partial<ContactInfo>
-): Record<string, unknown> {
-  switch (step) {
-    case 'project-type': return { projectType };
-    case 'budget-range': return { budgetRange };
-    case 'financing':    return { financingIntent };
-    case 'contact':      return { contact };
-  }
-}
-
 // ─── Componente Principal ─────────────────────────────────────────────────────
 
-export default function FunnelEngine({ dict }: { dict: FunnelEngineDict }) {
-  const currentStep        = useFunnelStore(selectCurrentStep);
-  const currentStepIndex   = useFunnelStore(selectCurrentStepIndex);
-  const progressPercentage = useFunnelStore(selectProgressPercentage);
-  const isFirstStep        = useFunnelStore(selectIsFirstStep);
-  const isLastStep         = useFunnelStore(selectIsLastStep);
-  const isSubmitted        = useFunnelStore(selectIsSubmitted);
-  const goToNextStep       = useFunnelStore((s) => s.goToNextStep);
-  const goToPreviousStep   = useFunnelStore((s) => s.goToPreviousStep);
-  const updateLeadData     = useFunnelStore((s) => s.updateLeadData);
-  const setSubmitted       = useFunnelStore((s) => s.setSubmitted);
+export default function FunnelEngine({ dict }: FunnelEngineProps) {
+  const isSubmitted    = useFunnelStore(selectIsSubmitted);
+  const updateLeadData = useFunnelStore((s) => s.updateLeadData);
+  const setSubmitted   = useFunnelStore((s) => s.setSubmitted);
 
-  const [projectType,     setProjectType]    = useState<ProjectType | null>(null);
-  const [budgetRange,     setBudgetRange]     = useState<BudgetRange | null>(null);
-  const [financingIntent, setFinancingIntent] = useState<FinancingIntent | null>(null);
-  const [contact,         setContactData]     = useState<Partial<ContactInfo>>({});
-  const [validationError, setValidationError] = useState<string | null>(null);
-  const [submitError,     setSubmitError]     = useState<string | null>(null);
-  const [direction,       setDirection]       = useState<1 | -1>(1);
+  // Estado local — evita re-renders globales hasta el submit
+  const [formData,    setFormData]    = useState<Partial<LeadFormData>>({});
+  const [errors,      setErrors]      = useState<Partial<Record<keyof LeadFormData, string>>>({});
+  const [submitError, setSubmitError] = useState<string | null>(null);
+  const [honeypot,    setHoneypot]    = useState('');
 
   const [isPending, startTransition] = useTransition();
-  const shouldReduceMotion = useReducedMotion();
-  const variants           = shouldReduceMotion ? reducedVariants : slideVariants;
 
-  const handleContactChange = (field: keyof ContactInfo, value: string) => {
-    setContactData((prev) => ({ ...prev, [field]: value }));
-    if (validationError) setValidationError(null);
-  };
+  // ─── Clases reutilizables ─────────────────────────────────────────────────
 
-  const handleNext = () => {
-    const stepData = buildStepData(currentStep, projectType, budgetRange, financingIntent, contact);
-    const schema   = stepSchemaRegistry[currentStep];
-    const result   = schema.safeParse(stepData);
+  const inputClass = (hasError: boolean) =>
+    [
+      'w-full px-4 py-4 text-sm rounded-sm border',
+      'bg-white text-slate-900 placeholder:text-slate-400',
+      'focus:outline-none focus:ring-2 focus:ring-rose-600/20 focus:border-rose-600',
+      'transition-all duration-150',
+      hasError ? 'border-rose-400' : 'border-slate-200',
+    ].join(' ');
+
+  const cardClass = (selected: boolean) =>
+    [
+      'min-h-[60px] flex items-center justify-center px-4 py-3',
+      'text-sm font-medium font-inter rounded-sm border text-center',
+      'transition-all duration-150 cursor-pointer select-none',
+      selected
+        ? 'ring-2 ring-rose-600 border-rose-600 bg-rose-50 text-rose-900'
+        : 'border-slate-200 text-slate-700 hover:border-slate-300 hover:bg-slate-50',
+    ].join(' ');
+
+  // ─── Submit ───────────────────────────────────────────────────────────────
+
+  const handleSubmit = () => {
+    const result = leadFormSchema.safeParse(formData);
 
     if (!result.success) {
-      setValidationError(result.error.issues[0]?.message ?? 'Selecciona una opción para continuar.');
+      const fieldErrors: Partial<Record<keyof LeadFormData, string>> = {};
+      for (const issue of result.error.issues) {
+        const field = issue.path[0] as keyof LeadFormData;
+        if (field && !fieldErrors[field]) {
+          // Use dict-based error for consentSms, Zod message for everything else
+          if (field === 'consentSms') {
+            fieldErrors[field] = dict.form.consentSms.error;
+          } else {
+            fieldErrors[field] = issue.message;
+          }
+        }
+      }
+      setErrors(fieldErrors);
       return;
     }
 
-    setValidationError(null);
-    updateLeadData(stepData as Parameters<typeof updateLeadData>[0]);
+    setErrors({});
+    setSubmitError(null);
 
-    if (isLastStep) {
-      const payload = {
-        projectType:     projectType!,
-        budgetRange:     budgetRange!,
-        financingIntent: financingIntent!,
-        contact:         contact as ContactInfo,
-        website:         '',
-      };
-      startTransition(async () => {
-        const res = await submitLead(payload);
-        if (res.success) {
-          setSubmitted(res.leadId ?? crypto.randomUUID());
-        } else {
-          setSubmitError(res.message);
-        }
-      });
-    } else {
-      setDirection(1);
-      goToNextStep();
-    }
+    startTransition(async () => {
+      updateLeadData(result.data);
+      const res = await submitLead({ ...result.data, website: honeypot });
+      if (res.success) {
+        setSubmitted(res.leadId ?? crypto.randomUUID());
+      } else {
+        setSubmitError(res.message);
+      }
+    });
   };
 
-  const handleBack = () => {
-    setValidationError(null);
-    setDirection(-1);
-    goToPreviousStep();
-  };
-
-  const renderStep = () => {
-    switch (currentStep) {
-      case 'project-type':
-        return <StepProjectType selected={projectType} onSelect={(v) => { setProjectType(v); setValidationError(null); }} step1={dict.step1} />;
-      case 'budget-range':
-        return <StepBudgetRange selected={budgetRange} onSelect={(v) => { setBudgetRange(v); setValidationError(null); }} step2={dict.step2} />;
-      case 'financing':
-        return <StepFinancing selected={financingIntent} onSelect={(v) => { setFinancingIntent(v); setValidationError(null); }} step3={dict.step3} />;
-      case 'contact':
-        return <StepContactInfo data={contact} onChange={handleContactChange} step4={dict.step4} />;
-    }
-  };
+  // ─── Success state ────────────────────────────────────────────────────────
 
   if (isSubmitted) {
     return (
-      <div className="bg-white rounded-sm shadow-luxury-lg overflow-hidden">
-        <ProgressBar percentage={100} />
-        <div className="p-8"><SuccessScreen success={dict.success} /></div>
+      <div className="bg-white rounded-xl shadow-luxury-lg overflow-hidden p-6 md:p-8">
+        <SuccessScreen success={dict.success} />
       </div>
     );
   }
 
+  // ─── Form ─────────────────────────────────────────────────────────────────
+
   return (
-    <div className="bg-white rounded-sm shadow-luxury-lg overflow-hidden">
-      <ProgressBar percentage={progressPercentage} />
+    <div className="bg-white rounded-xl shadow-luxury-lg overflow-hidden p-6 md:p-8">
 
-      <div className="p-8">
-        <AnimatePresence mode="wait" custom={direction}>
-          <motion.div
-            key={currentStepIndex}
-            custom={direction}
-            variants={variants}
-            initial="enter"
-            animate="center"
-            exit="exit"
-            transition={iosTransition}
-          >
-            {renderStep()}
-          </motion.div>
-        </AnimatePresence>
+      {/* Header */}
+      <div className="mb-6">
+        <h2 className="font-playfair text-2xl font-semibold text-slate-900 mb-2">
+          {dict.form.question}
+        </h2>
+        <p className="text-sm text-slate-500 font-inter">{dict.form.subtitle}</p>
+      </div>
 
-        {validationError && (
-          <motion.p
-            initial={{ opacity: 0, y: -4 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="mt-4 text-sm text-rose-700 font-medium font-inter"
-            role="alert"
-          >
-            {validationError}
-          </motion.p>
-        )}
+      <div className="flex flex-col gap-5">
 
-        {submitError && (
-          <motion.p
-            initial={{ opacity: 0, y: -4 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="mt-4 text-sm text-rose-700 font-medium font-inter"
-            role="alert"
-          >
-            {submitError}
-          </motion.p>
-        )}
-
-        <div className={['flex mt-8 gap-3', isFirstStep ? 'justify-end' : 'justify-between'].join(' ')}>
-          {!isFirstStep && (
-            <button
-              type="button"
-              onClick={handleBack}
-              disabled={isPending}
-              className="px-5 py-2.5 text-sm text-slate-500 border border-slate-200 rounded-sm hover:border-slate-300 hover:text-slate-700 transition-all duration-150 cursor-pointer disabled:opacity-40"
-            >
-              {dict.buttons.back}
-            </button>
+        {/* ── Nombre ───────────────────────────────────────────────────────── */}
+        <div className="flex flex-col gap-1.5">
+          <label htmlFor="funnel-name" className="text-sm font-medium text-slate-700">
+            {dict.form.fields.name}
+          </label>
+          <input
+            id="funnel-name"
+            type="text"
+            autoComplete="name"
+            value={formData.name ?? ''}
+            onChange={(e) => {
+              setFormData((p) => ({ ...p, name: e.target.value }));
+              if (errors.name) setErrors((p) => ({ ...p, name: undefined }));
+            }}
+            placeholder={dict.form.placeholders.name}
+            className={inputClass(!!errors.name)}
+          />
+          {errors.name && (
+            <p className="text-xs text-rose-600 font-inter" role="alert">{errors.name}</p>
           )}
-
-          <button
-            type="button"
-            onClick={handleNext}
-            disabled={isPending}
-            aria-disabled={isPending}
-            className={[
-              'flex-1 md:flex-none md:min-w-[140px] px-6 py-2.5 text-sm font-medium rounded-sm',
-              'transition-all duration-150 cursor-pointer',
-              isPending
-                ? 'bg-slate-300 text-slate-500 cursor-not-allowed'
-                : 'bg-slate-900 text-brand-cream hover:bg-slate-800',
-            ].join(' ')}
-          >
-            {isPending
-              ? dict.buttons.submitting
-              : isLastStep
-              ? dict.buttons.submit
-              : dict.buttons.continue}
-          </button>
         </div>
 
-        {/* Honeypot anti-spam */}
+        {/* ── Teléfono — teclado numérico nativo en iOS ─────────────────────── */}
+        <div className="flex flex-col gap-1.5">
+          <label htmlFor="funnel-phone" className="text-sm font-medium text-slate-700">
+            {dict.form.fields.phone}
+          </label>
+          <input
+            id="funnel-phone"
+            type="tel"
+            inputMode="tel"
+            autoComplete="tel"
+            value={formData.phone ?? ''}
+            onChange={(e) => {
+              setFormData((p) => ({ ...p, phone: e.target.value }));
+              if (errors.phone) setErrors((p) => ({ ...p, phone: undefined }));
+            }}
+            placeholder={dict.form.placeholders.phone}
+            className={inputClass(!!errors.phone)}
+          />
+          {errors.phone && (
+            <p className="text-xs text-rose-600 font-inter" role="alert">{errors.phone}</p>
+          )}
+        </div>
+
+        {/* ── Email (opcional) ──────────────────────────────────────────────── */}
+        <div className="flex flex-col gap-1.5">
+          <label htmlFor="funnel-email" className="text-sm font-medium text-slate-700">
+            {dict.form.fields.email}
+          </label>
+          <input
+            id="funnel-email"
+            type="email"
+            autoComplete="email"
+            value={formData.email ?? ''}
+            onChange={(e) => {
+              setFormData((p) => ({ ...p, email: e.target.value }));
+              if (errors.email) setErrors((p) => ({ ...p, email: undefined }));
+            }}
+            placeholder={dict.form.placeholders.email}
+            className={inputClass(!!errors.email)}
+          />
+          {errors.email && (
+            <p className="text-xs text-rose-600 font-inter" role="alert">{errors.email}</p>
+          )}
+        </div>
+
+        {/* ── Tipo de Proyecto — touch cards 2×2 ──────────────────────────── */}
+        <div className="flex flex-col gap-2">
+          <label className="text-sm font-medium text-slate-700">
+            {dict.form.fields.projectType}
+          </label>
+          <div className="grid grid-cols-2 gap-3">
+            {(['cocina', 'bano', 'deck', 'otro'] as const).map((value) => (
+              <button
+                key={value}
+                type="button"
+                onClick={() => {
+                  setFormData((p) => ({ ...p, projectType: value }));
+                  if (errors.projectType) setErrors((p) => ({ ...p, projectType: undefined }));
+                }}
+                className={cardClass(formData.projectType === value)}
+                aria-pressed={formData.projectType === value}
+              >
+                {dict.form.projectOptions[value]}
+              </button>
+            ))}
+          </div>
+          {errors.projectType && (
+            <p className="text-xs text-rose-600 font-inter" role="alert">{errors.projectType}</p>
+          )}
+        </div>
+
+        {/* ── Financiamiento — touch cards 2×1 ────────────────────────────── */}
+        <div className="flex flex-col gap-2">
+          <label className="text-sm font-medium text-slate-700">
+            {dict.form.fields.financing}
+          </label>
+          <div className="grid grid-cols-2 gap-3">
+            {(['yes', 'no'] as const).map((value) => (
+              <button
+                key={value}
+                type="button"
+                onClick={() => {
+                  setFormData((p) => ({ ...p, wantsFinancing: value }));
+                  if (errors.wantsFinancing) setErrors((p) => ({ ...p, wantsFinancing: undefined }));
+                }}
+                className={cardClass(formData.wantsFinancing === value)}
+                aria-pressed={formData.wantsFinancing === value}
+              >
+                {dict.form.financingOptions[value]}
+              </button>
+            ))}
+          </div>
+          {errors.wantsFinancing && (
+            <p className="text-xs text-rose-600 font-inter" role="alert">{errors.wantsFinancing}</p>
+          )}
+        </div>
+
+        {/* ── SMS Consent Checkbox (A2P 10DLC compliance) ──────────────────── */}
+        <div className="flex flex-col gap-1.5">
+          <label className="flex items-start gap-3 cursor-pointer group">
+            <input
+              id="funnel-consent-sms"
+              type="checkbox"
+              checked={formData.consentSms === true}
+              onChange={(e) => {
+                setFormData((p) => ({ ...p, consentSms: e.target.checked }));
+                if (errors.consentSms) setErrors((p) => ({ ...p, consentSms: undefined }));
+              }}
+              className="mt-0.5 h-4 w-4 rounded-sm border-slate-300 accent-rose-600 cursor-pointer flex-shrink-0"
+            />
+            <span className="text-xs text-slate-500 leading-relaxed font-inter">
+              {dict.form.consentSms.text}
+            </span>
+          </label>
+          {errors.consentSms && (
+            <p className="text-xs text-rose-600 font-inter" role="alert">{errors.consentSms}</p>
+          )}
+        </div>
+
+        {/* ── Error de envío ────────────────────────────────────────────────── */}
+        {submitError && (
+          <p className="text-sm text-rose-700 font-medium font-inter text-center" role="alert">
+            {submitError}
+          </p>
+        )}
+
+        {/* ── Trust Badges ─────────────────────────────────────────────────── */}
+        <div className="flex items-center justify-center flex-wrap gap-x-2 gap-y-1">
+          {dict.trustBadges.map((badge, i) => (
+            <span key={badge} className="flex items-center gap-2 text-xs text-slate-400 font-inter">
+              {i > 0 && <span aria-hidden="true" className="text-slate-300">·</span>}
+              {badge}
+            </span>
+          ))}
+        </div>
+
+        {/* ── Botón submit masivo ───────────────────────────────────────────── */}
+        <button
+          type="button"
+          onClick={handleSubmit}
+          disabled={isPending}
+          className={[
+            'w-full py-4 text-sm font-semibold rounded-sm',
+            'transition-all duration-150',
+            isPending
+              ? 'bg-slate-300 text-slate-500 cursor-not-allowed'
+              : 'bg-slate-900 text-white hover:bg-slate-800 cursor-pointer active:scale-[0.99]',
+          ].join(' ')}
+        >
+          {isPending ? dict.buttons.submitting : dict.buttons.getEstimate}
+        </button>
+
+        {/* ── Honeypot anti-spam (oculto para humanos, visible para bots) ──── */}
         <input
           type="text"
           name="website"
           tabIndex={-1}
           autoComplete="off"
           aria-hidden="true"
-          className="absolute left-[-9999px] w-px h-px overflow-hidden"
-          style={{ position: 'absolute', left: '-9999px' }}
+          value={honeypot}
+          onChange={(e) => setHoneypot(e.target.value)}
+          style={{ position: 'absolute', left: '-9999px', width: '1px', height: '1px', overflow: 'hidden' }}
         />
 
-        <p className="mt-6 text-center text-xs text-slate-400 font-inter">
-          {currentStepIndex + 1} {dict.stepCounter}
-        </p>
       </div>
     </div>
   );

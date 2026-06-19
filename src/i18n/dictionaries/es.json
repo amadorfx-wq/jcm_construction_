@@ -3,16 +3,19 @@
     "kitchens": "Remodelación de Cocinas",
     "bathrooms": "Remodelación de Baños",
     "decks": "Construcción de Decks",
-    "evaluate": "Evaluar mi Proyecto",
-    "callUs": "Llámanos"
+    "evaluate": "Cotización Gratis",
+    "callUs": "Llámanos",
+    "phoneDisplay": "+1 (678) 508-1879",
+    "phoneHref": "tel:+16785081879"
   },
   "hero": {
     "eyebrow": "Atlanta, GA · 15+ Años · 340+ Proyectos",
     "h1Line1": "Arquitectura y",
     "h1Line2": "Construcción que",
     "h1Line3": "Elevan tu Legado.",
+    "subheadline": "Consulta gratuita · Precio garantizado · Financiamiento desde $250/mes · Cronograma vinculante",
     "subtext": "Remodelación high-end en Atlanta. Cocinas, baños y decks de $30k a $150k construidos con precisión milimétrica, precio garantizado y cronograma vinculante.",
-    "ctaPrimary": "Solicitar Evaluación",
+    "ctaPrimary": "Obtén tu Cotización Gratis",
     "ctaSecondary": "Ver Proyectos",
     "stats": [
       { "value": "340+", "label": "Proyectos completados" },
@@ -28,19 +31,22 @@
       "title": "Remodelación de Cocinas",
       "description": "Diseño integral desde la distribución del espacio hasta los acabados finales. Quartz, gabinetes de ebanistería y electrodomésticos integrados.",
       "link": "Ver proyectos de cocinas",
-      "range": "$30k – $120k"
+      "range": "$30k – $120k",
+      "financingFrom": "desde $250/mes"
     },
     "bathrooms": {
       "title": "Renovación de Baños",
       "description": "Transformamos baños estándar en experiencias spa residenciales. Duchas walk-in, vanidades flotantes y grifería de lujo.",
       "link": "Ver proyectos de baños",
-      "range": "$15k – $65k"
+      "range": "$15k – $65k",
+      "financingFrom": "desde $250/mes"
     },
     "decks": {
       "title": "Construcción de Decks",
       "description": "Extensiones del hogar al exterior con materiales Trex de 25 años de garantía, pérgolas de cedro e iluminación LED integrada.",
       "link": "Ver proyectos de decks",
-      "range": "$25k – $80k"
+      "range": "$25k – $80k",
+      "financingFrom": "desde $250/mes"
     }
   },
   "portfolio": {
@@ -74,78 +80,67 @@
     "eyebrow": "Disponibilidad Limitada · Atlanta, GA",
     "title": "Tu proyecto merece",
     "titleAccent": "la precisión correcta.",
-    "description": "Solicita tu evaluación de proyecto. Un especialista analizará la viabilidad estructural de tu remodelación antes de comprometer un solo dólar de tu inversión.",
-    "pricingNote": "Evaluación estructural desde $500 · Diseño 3D desde $1,500",
-    "button": "Solicitar Evaluación de Proyecto"
+    "description": "Obtén tu cotización gratuita. Un especialista te contactará en 15 minutos — sin compromiso, sin costo.",
+    "pricingNote": "Consulta gratuita · Sin compromiso · Respondemos en 15 min",
+    "button": "Obtén tu Cotización Gratis"
   },
   "funnel": {
     "eyebrow": "Atlanta, GA · Disponibilidad Limitada",
-    "title": "Solicita tu Evaluación",
-    "titleAccent": "de Proyecto",
-    "description": "Nuestro proceso inicia con una evaluación estructural profunda ($500) o una visita especializada de diseño 3D ($1,500) para garantizar que tu inversión esté calculada al milímetro antes de demoler.",
+    "title": "Obtén tu Cotización",
+    "titleAccent": "Gratuita",
+    "description": "Cuéntanos sobre tu proyecto y un especialista te contactará en 15 minutos con una cotización personalizada. Gratis, sin compromiso.",
     "trust": {
       "protected": { "label": "Información Protegida", "description": "Tus datos nunca se comparten con terceros." },
-      "response": { "label": "Respuesta en 24 h", "description": "Un especialista confirmará disponibilidad." },
-      "noCommitment": { "label": "Sin Compromiso Inicial", "description": "Verificar disponibilidad no genera obligación." }
+      "response": { "label": "Respuesta en 15 min", "description": "Un especialista te contactará en minutos." },
+      "noCommitment": { "label": "Sin Compromiso", "description": "Consulta gratuita, cero obligación." }
     },
     "legal": "JC Milian Construction opera exclusivamente en el área metropolitana de Atlanta, GA. La disponibilidad está sujeta a la agenda del equipo de especialistas."
   },
   "funnelEngine": {
-    "step1": {
-      "counter": "Paso 1 de 4",
-      "question": "¿Qué tipo de proyecto tienes en mente?",
-      "options": {
-        "cocina": { "label": "Cocina", "description": "Remodelación completa o parcial" },
-        "bano": { "label": "Baño", "description": "Baño principal o de visitas" },
-        "deck": { "label": "Deck / Patio", "description": "Construcción o renovación exterior" },
-        "otro": { "label": "Otro proyecto", "description": "Cuéntanos sobre tu idea" }
+    "form": {
+      "question": "Obtén tu cotización gratis",
+      "subtitle": "Un especialista te contactará en 15 minutos.",
+      "fields": {
+        "name": "Nombre completo",
+        "phone": "Número de teléfono",
+        "email": "Correo electrónico (opcional)",
+        "projectType": "Tipo de proyecto",
+        "financing": "¿Te interesa el financiamiento?"
+      },
+      "placeholders": {
+        "name": "María García",
+        "phone": "(678) 555-0000",
+        "email": "maria@ejemplo.com"
+      },
+      "projectOptions": {
+        "cocina": "Cocina",
+        "bano": "Baño",
+        "deck": "Deck / Patio",
+        "otro": "Otro proyecto"
+      },
+      "financingOptions": {
+        "yes": "Sí, me interesa",
+        "no": "No, pago directo"
+      },
+      "consentSms": {
+        "text": "Acepto recibir mensajes SMS de JC Milian Construction sobre mi solicitud de presupuesto. Pueden aplicar tarifas de mensajes y datos. Responde STOP para cancelar.",
+        "error": "Debes aceptar recibir mensajes SMS para continuar."
       }
     },
-    "step2": {
-      "counter": "Paso 2 de 4",
-      "question": "¿Cuál es tu rango de inversión?",
-      "subtitle": "Esta información es confidencial y nos ayuda a preparar la propuesta correcta.",
-      "options": {
-        "under_15k": { "label": "Menos de $15,000", "description": "Proyecto de alcance limitado" },
-        "15k_30k": { "label": "$15,000 – $30,000", "description": "Remodelación parcial" },
-        "30k_60k": { "label": "$30,000 – $60,000", "description": "Remodelación completa estándar" },
-        "60k_100k": { "label": "$60,000 – $100,000", "description": "Remodelación completa premium" },
-        "over_100k": { "label": "Más de $100,000", "description": "Proyecto de lujo integral" }
-      }
-    },
-    "step3": {
-      "counter": "Paso 3 de 4",
-      "question": "¿Te interesa el financiamiento?",
-      "subtitle": "Ofrecemos financiamiento desde 5.9% APR. No afecta tu crédito consultar.",
-      "options": {
-        "yes": { "label": "Sí, me interesa", "description": "Quiero explorar opciones de financiamiento" },
-        "maybe": { "label": "Quizás", "description": "Depende de las condiciones disponibles" },
-        "no": { "label": "No, pago directo", "description": "Tengo el presupuesto disponible" }
-      }
-    },
-    "step4": {
-      "counter": "Paso 4 de 4",
-      "question": "¿Cómo te contactamos?",
-      "subtitle": "Un especialista se comunicará contigo en menos de 24 horas.",
-      "fields": { "name": "Nombre completo", "email": "Correo electrónico", "phone": "Teléfono", "city": "Ciudad / Área" },
-      "placeholders": { "name": "María García", "email": "maria@ejemplo.com", "phone": "(404) 555-0000", "city": "Buckhead, Atlanta" }
-    },
+    "trustBadges": ["Gratis", "Sin compromiso", "Respondemos en 15 min"],
     "success": {
-      "title": "Solicitud recibida",
-      "body": "Un especialista de JC Milian se comunicará contigo en las próximas 24 horas para coordinar tu evaluación.",
+      "title": "Te llamamos en 15 min",
+      "body": "Un especialista de JC Milian te contactará en breve para discutir tu cotización gratuita.",
       "highlights": [
-        { "label": "Confidencial", "sub": "Tus datos están protegidos" },
-        { "label": "24 horas", "sub": "Tiempo máximo de respuesta" },
-        { "label": "Sin costo", "sub": "La consulta es gratuita" }
+        { "label": "Gratis", "sub": "Sin costo, sin obligación" },
+        { "label": "15 min", "sub": "Tiempo máximo de respuesta" },
+        { "label": "Precio vinculante", "sub": "Costo final garantizado" }
       ]
     },
     "buttons": {
-      "back": "Atrás",
-      "continue": "Continuar",
-      "submit": "Enviar solicitud",
+      "getEstimate": "Obtén tu cotización gratis",
       "submitting": "Enviando…"
-    },
-    "stepCounter": "de 4 · Consulta confidencial y sin costo"
+    }
   },
   "silos": {
     "kitchens": {
@@ -158,8 +153,9 @@
         { "value": "9.8/10", "label": "satisfacción de clientes" }
       ],
       "ctaTitle": "¿Lista tu cocina para transformarse?",
-      "ctaText": "Iniciamos con una evaluación estructural profunda ($500) o una visita de diseño 3D ($1,500) para que tu inversión esté calculada al milímetro antes de demoler.",
-      "ctaButton": "Solicitar Evaluación de Proyecto"
+      "ctaText": "Obtén tu cotización gratuita hoy. Un especialista te contactará en 15 minutos para hablar de tu proyecto.",
+      "ctaButton": "Obtén tu Cotización Gratis",
+      "financingAnchor": "Financiamiento desde $250/mes · Sujeto a aprobación de crédito"
     },
     "bathrooms": {
       "eyebrow": "Baños · Atlanta, GA",
@@ -171,8 +167,9 @@
         { "value": "5★", "label": "calificación Google" }
       ],
       "ctaTitle": "¿Listo tu baño para convertirse en ritual?",
-      "ctaText": "Iniciamos con una evaluación estructural profunda ($500) o una visita de diseño 3D ($1,500) para que tu inversión esté calculada al milímetro antes de demoler.",
-      "ctaButton": "Solicitar Evaluación de Proyecto"
+      "ctaText": "Obtén tu cotización gratuita hoy. Un especialista te contactará en 15 minutos para hablar de tu proyecto.",
+      "ctaButton": "Obtén tu Cotización Gratis",
+      "financingAnchor": "Financiamiento desde $250/mes · Sujeto a aprobación de crédito"
     },
     "decks": {
       "eyebrow": "Decks & Exteriores · Atlanta, GA",
@@ -184,8 +181,9 @@
         { "value": "5★", "label": "calificación Google" }
       ],
       "ctaTitle": "¿Listo tu exterior para el siguiente nivel?",
-      "ctaText": "Iniciamos con una evaluación estructural profunda ($500) o una visita de diseño 3D ($1,500) para que tu inversión esté calculada al milímetro antes de construir.",
-      "ctaButton": "Solicitar Evaluación de Proyecto"
+      "ctaText": "Obtén tu cotización gratuita hoy. Un especialista te contactará en 15 minutos para hablar de tu proyecto.",
+      "ctaButton": "Obtén tu Cotización Gratis",
+      "financingAnchor": "Financiamiento desde $250/mes · Sujeto a aprobación de crédito"
     }
   },
   "riskReversal": {
@@ -234,5 +232,22 @@
     "financingFrom": "Desde",
     "financingPerMonth": "/mes*",
     "financingNote": "*Estimado basado en 5.9% APR / 60 meses. Sujeto a aprobación de crédito. No constituye oferta de financiamiento."
+  },
+  "whatsapp": {
+    "ariaLabel": "Chatea con nosotros por WhatsApp",
+    "prefilledMessage": "¡Hola! Me gustaría obtener una cotización gratuita para mi proyecto de remodelación."
+  },
+  "footer": {
+    "tagline": "Remodelación premium en Atlanta, GA.",
+    "phone": "+1 (678) 508-1879",
+    "phoneHref": "tel:+16785081879",
+    "copyright": "© 2026 JC Milian Construction. Todos los derechos reservados.",
+    "address": "Área Metropolitana de Atlanta, GA",
+    "links": {
+      "kitchens": "Remodelación de Cocinas",
+      "bathrooms": "Renovación de Baños",
+      "decks": "Construcción de Decks",
+      "estimate": "Cotización Gratis"
+    }
   }
 }

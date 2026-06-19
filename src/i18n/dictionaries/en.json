@@ -3,16 +3,19 @@
     "kitchens": "Kitchen Remodeling",
     "bathrooms": "Bathroom Remodeling",
     "decks": "Deck Construction",
-    "evaluate": "Evaluate My Project",
-    "callUs": "Call Us"
+    "evaluate": "Get Free Estimate",
+    "callUs": "Call Us",
+    "phoneDisplay": "+1 (678) 508-1879",
+    "phoneHref": "tel:+16785081879"
   },
   "hero": {
     "eyebrow": "Atlanta, GA · 15+ Years · 340+ Projects",
     "h1Line1": "Architecture and",
     "h1Line2": "Construction that",
     "h1Line3": "Elevate Your Legacy.",
+    "subheadline": "Free consultation · Guaranteed price · Financing from $250/mo · Binding schedule",
     "subtext": "High-end remodeling in Atlanta. Kitchens, bathrooms, and decks from $30k to $150k built with millimeter precision, guaranteed price, and binding schedule.",
-    "ctaPrimary": "Request Evaluation",
+    "ctaPrimary": "Get Your Free Estimate",
     "ctaSecondary": "View Projects",
     "stats": [
       { "value": "340+", "label": "Completed projects" },
@@ -28,19 +31,22 @@
       "title": "Kitchen Remodeling",
       "description": "Comprehensive design from space layout to final finishes. Quartz, custom cabinetry, and integrated appliances.",
       "link": "View kitchen projects",
-      "range": "$30k – $120k"
+      "range": "$30k – $120k",
+      "financingFrom": "from $250/mo"
     },
     "bathrooms": {
       "title": "Bathroom Renovation",
       "description": "We transform standard bathrooms into residential spa experiences. Walk-in showers, floating vanities, and luxury fixtures.",
       "link": "View bathroom projects",
-      "range": "$15k – $65k"
+      "range": "$15k – $65k",
+      "financingFrom": "from $250/mo"
     },
     "decks": {
       "title": "Deck Construction",
       "description": "Home extensions outdoors with 25-year Trex materials, cedar pergolas, and integrated LED lighting.",
       "link": "View deck projects",
-      "range": "$25k – $80k"
+      "range": "$25k – $80k",
+      "financingFrom": "from $250/mo"
     }
   },
   "portfolio": {
@@ -74,78 +80,67 @@
     "eyebrow": "Limited Availability · Atlanta, GA",
     "title": "Your project deserves",
     "titleAccent": "the right precision.",
-    "description": "Request your project evaluation. A specialist will analyze the structural viability of your remodel before committing a single dollar of your investment.",
-    "pricingNote": "Structural evaluation from $500 · 3D Design from $1,500",
-    "button": "Request Project Evaluation"
+    "description": "Get your free project estimate. A specialist will contact you within 15 minutes — no commitment, no cost.",
+    "pricingNote": "Free consultation · No commitment · We respond in 15 min",
+    "button": "Get Your Free Estimate"
   },
   "funnel": {
     "eyebrow": "Atlanta, GA · Limited Availability",
-    "title": "Request Your Project",
-    "titleAccent": "Evaluation",
-    "description": "Our process starts with a deep structural evaluation ($500) or a specialized 3D design visit ($1,500) to ensure your investment is calculated to the millimeter before demolition.",
+    "title": "Get Your Free",
+    "titleAccent": "Estimate",
+    "description": "Tell us about your project and a specialist will contact you within 15 minutes with a personalized estimate. Free, no commitment.",
     "trust": {
       "protected": { "label": "Protected Information", "description": "Your data is never shared with third parties." },
-      "response": { "label": "24h Response", "description": "A specialist will confirm availability." },
-      "noCommitment": { "label": "No Initial Commitment", "description": "Verifying availability creates no obligation." }
+      "response": { "label": "15 min Response", "description": "A specialist will contact you in minutes." },
+      "noCommitment": { "label": "No Commitment", "description": "Free consultation, zero obligation." }
     },
     "legal": "JC Milian Construction operates exclusively in the Atlanta, GA metropolitan area. Availability is subject to the specialist team's schedule."
   },
   "funnelEngine": {
-    "step1": {
-      "counter": "Step 1 of 4",
-      "question": "What type of project do you have in mind?",
-      "options": {
-        "cocina": { "label": "Kitchen", "description": "Full or partial remodel" },
-        "bano": { "label": "Bathroom", "description": "Primary or guest bathroom" },
-        "deck": { "label": "Deck / Patio", "description": "Exterior construction or renovation" },
-        "otro": { "label": "Other project", "description": "Tell us about your idea" }
+    "form": {
+      "question": "Get your free estimate",
+      "subtitle": "A specialist will contact you in 15 minutes.",
+      "fields": {
+        "name": "Full name",
+        "phone": "Phone number",
+        "email": "Email (optional)",
+        "projectType": "Project type",
+        "financing": "Interested in financing?"
+      },
+      "placeholders": {
+        "name": "Maria Garcia",
+        "phone": "(678) 555-0000",
+        "email": "maria@example.com"
+      },
+      "projectOptions": {
+        "cocina": "Kitchen",
+        "bano": "Bathroom",
+        "deck": "Deck / Patio",
+        "otro": "Other project"
+      },
+      "financingOptions": {
+        "yes": "Yes, I'm interested",
+        "no": "No, paying directly"
+      },
+      "consentSms": {
+        "text": "I agree to receive SMS messages from JC Milian Construction about my estimate request. Message & data rates may apply. Reply STOP to opt out.",
+        "error": "You must agree to receive SMS messages to continue."
       }
     },
-    "step2": {
-      "counter": "Step 2 of 4",
-      "question": "What is your investment range?",
-      "subtitle": "This information is confidential and helps us prepare the right proposal.",
-      "options": {
-        "under_15k": { "label": "Less than $15,000", "description": "Limited scope project" },
-        "15k_30k": { "label": "$15,000 – $30,000", "description": "Partial remodel" },
-        "30k_60k": { "label": "$30,000 – $60,000", "description": "Full standard remodel" },
-        "60k_100k": { "label": "$60,000 – $100,000", "description": "Full premium remodel" },
-        "over_100k": { "label": "Over $100,000", "description": "Full luxury project" }
-      }
-    },
-    "step3": {
-      "counter": "Step 3 of 4",
-      "question": "Are you interested in financing?",
-      "subtitle": "We offer financing from 5.9% APR. Checking does not affect your credit.",
-      "options": {
-        "yes": { "label": "Yes, I'm interested", "description": "I want to explore financing options" },
-        "maybe": { "label": "Maybe", "description": "Depends on available conditions" },
-        "no": { "label": "No, paying directly", "description": "I have the budget available" }
-      }
-    },
-    "step4": {
-      "counter": "Step 4 of 4",
-      "question": "How do we contact you?",
-      "subtitle": "A specialist will contact you within 24 hours.",
-      "fields": { "name": "Full name", "email": "Email address", "phone": "Phone", "city": "City / Area" },
-      "placeholders": { "name": "Maria Garcia", "email": "maria@example.com", "phone": "(404) 555-0000", "city": "Buckhead, Atlanta" }
-    },
+    "trustBadges": ["Free", "No commitment", "We respond in 15 min"],
     "success": {
-      "title": "Request received",
-      "body": "A JC Milian specialist will contact you in the next 24 hours to coordinate your evaluation.",
+      "title": "We'll call you in 15 min",
+      "body": "A JC Milian specialist will contact you shortly to discuss your free estimate.",
       "highlights": [
-        { "label": "Confidential", "sub": "Your data is protected" },
-        { "label": "24 hours", "sub": "Maximum response time" },
-        { "label": "No cost", "sub": "The consultation is free" }
+        { "label": "Free", "sub": "No cost, no obligation" },
+        { "label": "15 min", "sub": "Maximum response time" },
+        { "label": "Binding price", "sub": "Guaranteed final cost" }
       ]
     },
     "buttons": {
-      "back": "Back",
-      "continue": "Continue",
-      "submit": "Submit Request",
-      "submitting": "Submitting..."
-    },
-    "stepCounter": "of 4 · Confidential and free consultation"
+      "getEstimate": "Get your free estimate",
+      "submitting": "Sending..."
+    }
   },
   "silos": {
     "kitchens": {
@@ -158,8 +153,9 @@
         { "value": "9.8/10", "label": "client satisfaction" }
       ],
       "ctaTitle": "Is Your Kitchen Ready to Transform?",
-      "ctaText": "We start with a deep structural evaluation ($500) or a 3D design visit ($1,500) so your investment is calculated to the millimeter before demolition.",
-      "ctaButton": "Request Project Evaluation"
+      "ctaText": "Get your free estimate today. A specialist will contact you in 15 minutes to discuss your project.",
+      "ctaButton": "Get Your Free Estimate",
+      "financingAnchor": "Financing from $250/mo · Subject to credit approval"
     },
     "bathrooms": {
       "eyebrow": "Bathrooms · Atlanta, GA",
@@ -171,8 +167,9 @@
         { "value": "5★", "label": "Google rating" }
       ],
       "ctaTitle": "Is Your Bathroom Ready to Become a Ritual?",
-      "ctaText": "We start with a deep structural evaluation ($500) or a 3D design visit ($1,500) so your investment is calculated to the millimeter before demolition.",
-      "ctaButton": "Request Project Evaluation"
+      "ctaText": "Get your free estimate today. A specialist will contact you in 15 minutes to discuss your project.",
+      "ctaButton": "Get Your Free Estimate",
+      "financingAnchor": "Financing from $250/mo · Subject to credit approval"
     },
     "decks": {
       "eyebrow": "Decks & Exteriors · Atlanta, GA",
@@ -184,8 +181,9 @@
         { "value": "5★", "label": "Google rating" }
       ],
       "ctaTitle": "Is Your Exterior Ready for the Next Level?",
-      "ctaText": "We start with a deep structural evaluation ($500) or a 3D design visit ($1,500) so your investment is calculated to the millimeter before building.",
-      "ctaButton": "Request Project Evaluation"
+      "ctaText": "Get your free estimate today. A specialist will contact you in 15 minutes to discuss your project.",
+      "ctaButton": "Get Your Free Estimate",
+      "financingAnchor": "Financing from $250/mo · Subject to credit approval"
     }
   },
   "riskReversal": {
@@ -234,5 +232,22 @@
     "financingFrom": "From",
     "financingPerMonth": "/mo*",
     "financingNote": "*Estimated at 5.9% APR / 60 months. Subject to credit approval. Not a financing offer."
+  },
+  "whatsapp": {
+    "ariaLabel": "Chat with us on WhatsApp",
+    "prefilledMessage": "Hello! I'd like to get a free estimate for my remodeling project."
+  },
+  "footer": {
+    "tagline": "Premium remodeling in Atlanta, GA.",
+    "phone": "+1 (678) 508-1879",
+    "phoneHref": "tel:+16785081879",
+    "copyright": "© 2026 JC Milian Construction. All rights reserved.",
+    "address": "Atlanta, GA Metropolitan Area",
+    "links": {
+      "kitchens": "Kitchen Remodeling",
+      "bathrooms": "Bathroom Renovation",
+      "decks": "Deck Construction",
+      "estimate": "Free Estimate"
+    }
   }
 }

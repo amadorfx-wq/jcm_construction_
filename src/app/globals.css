@@ -502,3 +502,28 @@
   background: rgba(190, 18, 60, 0.35);
   color: #ffffff;
 }
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   WebKit Shadow DOM Suppression — iOS Safari Media Controls
+   Aniquila el botón de play nativo y toda la UI de controles que Safari
+   inyecta via Shadow DOM. Aplica incluso sin el atributo `controls`.
+   El `start-playback-button` es el botón gigante del Low Power Mode.
+   Combo de 4 propiedades por bug WebKit #134479 (display:none insuficiente).
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+video::-webkit-media-controls,
+video::-webkit-media-controls-panel,
+video::-webkit-media-controls-overlay-play-button,
+video::-webkit-media-controls-start-playback-button,
+video::-webkit-media-controls-play-button,
+video::-webkit-media-controls-fullscreen-button,
+video::-webkit-media-controls-timeline,
+video::-webkit-media-controls-volume-slider,
+video::-webkit-media-controls-mute-button,
+video::-webkit-media-controls-current-time-display,
+video::-webkit-media-controls-time-remaining-display {
+  display: none !important;
+  -webkit-appearance: none !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}

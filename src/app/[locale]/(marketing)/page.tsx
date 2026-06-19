@@ -12,6 +12,8 @@ import RiskReversal from '@/components/Trust/RiskReversal';
 import VideoHero from '@/components/layout/VideoHero';
 import { getDictionary } from '@/i18n/getDictionary';
 import type { Locale } from '@/i18n/config';
+import { getLocalizedHref } from '@/i18n/routes';
+import type { RouteKey } from '@/i18n/routes';
 
 export async function generateMetadata({
   params,
@@ -70,11 +72,11 @@ const SERVICE_ICONS = {
   decks: <DeckIcon />,
 } as const;
 
-const SERVICE_PATHS = {
-  kitchens: '/remodelacion-cocinas',
-  bathrooms: '/remodelacion-banos',
-  decks: '/construccion-decks',
-} as const;
+const SERVICE_ROUTE_KEYS = {
+  kitchens:  'kitchens',
+  bathrooms: 'bathrooms',
+  decks:     'decks',
+} as const satisfies Record<string, RouteKey>;
 
 // ─── Página ───────────────────────────────────────────────────────────────────
 
@@ -128,13 +130,19 @@ export default async function HomePage({
                       <span className="text-slate-600">{service.range}</span>
                     </p>
                   </div>
-                  <Link
-                    href={`/${locale}${SERVICE_PATHS[key]}`}
-                    className="group/link flex items-center gap-2 text-sm font-medium text-slate-700 hover:text-slate-900 transition-colors w-fit"
-                  >
-                    <span>{service.link}</span>
-                    <span className="transition-transform duration-200 group-hover/link:translate-x-1" aria-hidden="true">→</span>
-                  </Link>
+                  <div className="flex flex-col gap-1">
+                    <Link
+                      href={getLocalizedHref(SERVICE_ROUTE_KEYS[key], locale)}
+                      className="group/link flex items-center gap-2 text-sm font-medium text-slate-700 hover:text-slate-900 transition-colors w-fit"
+                    >
+                      <span>{service.link}</span>
+                      <span className="transition-transform duration-200 group-hover/link:translate-x-1" aria-hidden="true">→</span>
+                    </Link>
+                    {/* ── Micro-CTA de anclaje financiero ── */}
+                    <p className="text-sm text-slate-500 font-inter">
+                      {service.financingFrom}
+                    </p>
+                  </div>
                   <span
                     className="absolute bottom-0 left-0 right-0 h-px bg-rose-600 scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"
                     aria-hidden="true"
@@ -212,7 +220,7 @@ export default async function HomePage({
             {dict.cta.description}
           </p>
           <Link
-            href={`/${locale}/evaluacion-proyecto`}
+            href={getLocalizedHref('estimate', locale)}
             className="inline-flex items-center gap-3 px-10 py-4 bg-brand-cream text-slate-900 text-sm font-semibold rounded-sm hover:bg-white transition-colors duration-200"
           >
             {dict.cta.button}

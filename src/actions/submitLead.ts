@@ -2,7 +2,7 @@
 
 // ─────────────────────────────────────────────────────────────────────────────
 // JC Milian Construction — Server Action: submitLead
-// Validación Zod + Honeypot + Email vía Resend + BudgetGate server-only
+// Validación Zod + Honeypot + Email vía Resend + GHL Webhook
 // ─────────────────────────────────────────────────────────────────────────────
 
 import { Resend } from 'resend';
@@ -10,7 +10,7 @@ import { z } from 'zod';
 import { leadFormSchema, inboundLeadSchema } from '@/lib/validations/leadSchema';
 import type { SubmitLeadResult } from '@/types';
 
-// ─── Env vars (validados en runtime, no en build) ─────────────────────────────
+// ─── Env vars ─────────────────────────────────────────────────────────────────
 
 function requireEnv(key: string): string {
   const val = process.env[key];
@@ -21,96 +21,150 @@ function requireEnv(key: string): string {
 // ─── Schema con honeypot ──────────────────────────────────────────────────────
 
 const serverPayloadSchema = leadFormSchema.extend({
-  // Campo honeypot: visible para bots, oculto via CSS para humanos.
-  // Nombre "website" parece legítimo para bots.
   website: z.string().default(''),
 });
+
+// ─── Labels para el email ─────────────────────────────────────────────────────
+
+const projectLabels: Record<string, string> = {
+  cocina: 'Kitchen Remodeling',
+  bano:   'Bathroom Renovation',
+  deck:   'Deck Construction',
+  otro:   'Other project',
+};
+
+const financingLabels: Record<string, string> = {
+  yes: 'Yes, interested in financing',
+  no:  'No, paying directly',
+};
+
+// ─── Name splitter (handles Latino compound names) ────────────────────────────
+
+function splitName(fullName: string): { firstName: string; lastName: string } {
+  const trimmed = fullName.trim();
+  const spaceIndex = trimmed.indexOf(' ');
+  if (spaceIndex === -1) {
+    return { firstName: trimmed, lastName: '' };
+  }
+  return {
+    firstName: trimmed.slice(0, spaceIndex),
+    lastName: trimmed.slice(spaceIndex + 1),
+  };
+}
+
+// ─── GHL Webhook (fire-and-forget, never blocks user) ─────────────────────────
+
+async function sendToGHL(lead: z.output<typeof inboundLeadSchema>): Promise<void> {
+  const webhookUrl = process.env.GHL_WEBHOOK_URL?.trim();
+
+  if (!webhookUrl) {
+    console.warn('[submitLead] GHL_WEBHOOK_URL not set — skipping GHL webhook.');
+    return;
+  }
+
+  const { firstName, lastName } = splitName(lead.name);
+
+  const ghlPayload = {
+    first_name:      firstName,
+    last_name:       lastName,
+    full_name:       lead.name,
+    phone:           lead.phone,
+    email:           lead.email ?? '',
+    project_type:    projectLabels[lead.projectType] ?? lead.projectType,
+    wants_financing: lead.wantsFinancing,
+    message:         `Project type: ${projectLabels[lead.projectType] ?? lead.projectType} | Financing: ${financingLabels[lead.wantsFinancing] ?? lead.wantsFinancing}`,
+    source:          'Website - Free Estimate Form',
+    consent_sms:     true,
+  };
+
+  try {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 5000);
+
+    await fetch(webhookUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(ghlPayload),
+      signal: controller.signal,
+    });
+
+    clearTimeout(timeoutId);
+  } catch (error) {
+    // GHL failure must NEVER affect the user experience.
+    // Log and move on — the Resend email is the source of truth.
+    console.error('[submitLead] GHL webhook error (non-blocking):', error);
+  }
+}
 
 // ─── Email builder ────────────────────────────────────────────────────────────
 
 function buildLeadEmailHtml(lead: z.output<typeof inboundLeadSchema>): string {
-  const qualificationBadge = lead.isQualified
-    ? `<span style="background:#16a34a;color:#fff;padding:4px 12px;border-radius:4px;font-size:13px;font-weight:600;">✓ LEAD CALIFICADO</span>`
-    : `<span style="background:#dc2626;color:#fff;padding:4px 12px;border-radius:4px;font-size:13px;font-weight:600;">✗ DESCALIFICADO — Automation</span>`;
-
-  const budgetLabels: Record<string, string> = {
-    under_15k: 'Menos de $15,000',
-    '15k_30k': '$15,000 – $30,000',
-    '30k_60k': '$30,000 – $60,000',
-    '60k_100k': '$60,000 – $100,000',
-    over_100k: 'Más de $100,000',
-  };
-
-  const projectLabels: Record<string, string> = {
-    cocina: 'Remodelación de Cocina',
-    bano: 'Remodelación de Baño',
-    deck: 'Construcción de Deck',
-    otro: 'Otro proyecto',
-  };
-
-  const financingLabels: Record<string, string> = {
-    yes: 'Sí, busca financiamiento',
-    no: 'No, pago directo',
-    maybe: 'Quizás, pendiente evaluar',
-  };
+  const consentTimestamp = new Date(lead.submittedAt).toLocaleString('en-US', { timeZone: 'America/New_York' });
 
   return `
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Nuevo Lead — JC Milian</title>
+  <title>New Lead — JC Milian</title>
 </head>
 <body style="font-family:system-ui,sans-serif;max-width:600px;margin:0 auto;padding:24px;color:#111827;">
+
   <div style="border-left:3px solid #be123c;padding-left:16px;margin-bottom:24px;">
-    <h1 style="margin:0;font-size:22px;font-weight:700;">Nuevo Lead — JC Milian Construction</h1>
-    <p style="margin:4px 0 0;color:#6b7280;font-size:14px;">ID: ${lead.id} · ${new Date(lead.submittedAt).toLocaleString('es-US', { timeZone: 'America/New_York' })} ET</p>
+    <h1 style="margin:0;font-size:22px;font-weight:700;">New Lead — JC Milian Construction</h1>
+    <p style="margin:4px 0 0;color:#6b7280;font-size:14px;">
+      ID: ${lead.id} · ${consentTimestamp} ET
+    </p>
   </div>
 
-  <div style="margin-bottom:20px;">${qualificationBadge}</div>
+  <div style="margin-bottom:20px;">
+    <span style="background:#16a34a;color:#fff;padding:4px 12px;border-radius:4px;font-size:13px;font-weight:600;">
+      ✓ FREE ESTIMATE REQUEST
+    </span>
+  </div>
 
   <table style="width:100%;border-collapse:collapse;font-size:15px;">
     <tr style="border-bottom:1px solid #e5e7eb;">
-      <td style="padding:10px 0;color:#6b7280;width:40%;">Nombre</td>
-      <td style="padding:10px 0;font-weight:600;">${lead.contact.name}</td>
+      <td style="padding:10px 0;color:#6b7280;width:40%;">Name</td>
+      <td style="padding:10px 0;font-weight:600;">${lead.name}</td>
+    </tr>
+    <tr style="border-bottom:1px solid #e5e7eb;">
+      <td style="padding:10px 0;color:#6b7280;">Phone</td>
+      <td style="padding:10px 0;">
+        <a href="tel:${lead.phone.replace(/[\s\(\)\-]/g, '')}" style="color:#be123c;font-weight:600;">
+          ${lead.phone}
+        </a>
+      </td>
     </tr>
     <tr style="border-bottom:1px solid #e5e7eb;">
       <td style="padding:10px 0;color:#6b7280;">Email</td>
-      <td style="padding:10px 0;"><a href="mailto:${lead.contact.email}" style="color:#be123c;">${lead.contact.email}</a></td>
+      <td style="padding:10px 0;">${lead.email || '—'}</td>
     </tr>
     <tr style="border-bottom:1px solid #e5e7eb;">
-      <td style="padding:10px 0;color:#6b7280;">Teléfono</td>
-      <td style="padding:10px 0;"><a href="tel:${lead.contact.phone}" style="color:#be123c;">${lead.contact.phone}</a></td>
-    </tr>
-    <tr style="border-bottom:1px solid #e5e7eb;">
-      <td style="padding:10px 0;color:#6b7280;">Ciudad</td>
-      <td style="padding:10px 0;">${lead.contact.city}</td>
-    </tr>
-    <tr style="border-bottom:1px solid #e5e7eb;">
-      <td style="padding:10px 0;color:#6b7280;">Proyecto</td>
+      <td style="padding:10px 0;color:#6b7280;">Project</td>
       <td style="padding:10px 0;">${projectLabels[lead.projectType] ?? lead.projectType}</td>
     </tr>
     <tr style="border-bottom:1px solid #e5e7eb;">
-      <td style="padding:10px 0;color:#6b7280;">Presupuesto</td>
-      <td style="padding:10px 0;">${budgetLabels[lead.budgetRange] ?? lead.budgetRange}</td>
+      <td style="padding:10px 0;color:#6b7280;">Financing</td>
+      <td style="padding:10px 0;">${financingLabels[lead.wantsFinancing] ?? lead.wantsFinancing}</td>
     </tr>
     <tr>
-      <td style="padding:10px 0;color:#6b7280;">Financiamiento</td>
-      <td style="padding:10px 0;">${financingLabels[lead.financingIntent] ?? lead.financingIntent}</td>
+      <td style="padding:10px 0;color:#6b7280;">SMS Consent</td>
+      <td style="padding:10px 0;">
+        <span style="color:#16a34a;font-weight:600;">✓ Yes</span>
+        <span style="color:#6b7280;font-size:12px;"> — ${consentTimestamp} ET</span>
+      </td>
     </tr>
   </table>
 
-  ${
-    lead.derivedToAutomation
-      ? `<div style="margin-top:24px;padding:12px 16px;background:#fef2f2;border:1px solid #fca5a5;border-radius:6px;font-size:13px;color:#991b1b;">
-          Este lead ha sido derivado al flujo de automatización (presupuesto descalificado). No requiere seguimiento manual.
-        </div>`
-      : `<div style="margin-top:24px;padding:12px 16px;background:#f0fdf4;border:1px solid #86efac;border-radius:6px;font-size:13px;color:#166534;">
-          Lead calificado. Contactar en las próximas 24 horas para máxima tasa de cierre.
-        </div>`
-  }
+  <div style="margin-top:24px;padding:12px 16px;background:#f0fdf4;border:1px solid #86efac;border-radius:6px;font-size:13px;color:#166534;">
+    Free estimate request. Contact within <strong>15 minutes</strong> for maximum conversion rate.
+  </div>
 
-  <p style="margin-top:32px;font-size:12px;color:#9ca3af;">JC Milian Construction · Atlanta, GA · Sistema automatizado</p>
+  <p style="margin-top:32px;font-size:12px;color:#9ca3af;">
+    JC Milian Construction · Atlanta, GA · Automated system
+  </p>
+
 </body>
 </html>`;
 }
@@ -118,7 +172,7 @@ function buildLeadEmailHtml(lead: z.output<typeof inboundLeadSchema>): string {
 // ─── Server Action ────────────────────────────────────────────────────────────
 
 export async function submitLead(rawPayload: unknown): Promise<SubmitLeadResult> {
-  // 1. Validar payload contra schema con honeypot
+  // 1. Validar payload con honeypot
   const parseResult = serverPayloadSchema.safeParse(rawPayload);
   if (!parseResult.success) {
     return {
@@ -127,14 +181,13 @@ export async function submitLead(rawPayload: unknown): Promise<SubmitLeadResult>
     };
   }
 
-  // 2. Extraer honeypot — respuesta silenciosa si fue completado (es un bot)
+  // 2. Honeypot check — respuesta silenciosa si fue completado
   const { website: honeypot, ...formData } = parseResult.data;
   if (honeypot.length > 0) {
-    // Respuesta idéntica al éxito real — nunca revelar la detección
     return { success: true, message: 'Tu solicitud ha sido enviada exitosamente.' };
   }
 
-  // 3. Transformar con lógica server-only (isQualified, derivedToAutomation, id)
+  // 3. Transformar con lógica server-only (id, submittedAt)
   const leadResult = inboundLeadSchema.safeParse(formData);
   if (!leadResult.success) {
     return { success: false, message: 'Error interno al procesar tu solicitud.' };
@@ -143,23 +196,19 @@ export async function submitLead(rawPayload: unknown): Promise<SubmitLeadResult>
   const lead = leadResult.data;
 
   // 4. Enviar email de notificación vía Resend
+  //    This is the SOURCE OF TRUTH — user-facing success/failure depends ONLY on this.
   try {
-    const resend = new Resend(requireEnv('RESEND_API_KEY'));
+    const resend    = new Resend(requireEnv('RESEND_API_KEY'));
     const adminEmail = requireEnv('ADMIN_EMAIL');
-    const fromEmail = requireEnv('FROM_EMAIL');
-
-    const subject = lead.isQualified
-      ? `🔥 Lead Calificado: ${lead.contact.name} — ${lead.contact.city}`
-      : `Lead recibido (automático): ${lead.contact.name}`;
+    const fromEmail  = requireEnv('FROM_EMAIL');
 
     await resend.emails.send({
-      from: fromEmail,
-      to: adminEmail,
-      subject,
-      html: buildLeadEmailHtml(lead),
+      from:    fromEmail,
+      to:      adminEmail,
+      subject: `🔥 Free Estimate: ${lead.name} — ${projectLabels[lead.projectType] ?? lead.projectType}`,
+      html:    buildLeadEmailHtml(lead),
     });
   } catch (error) {
-    // Loguear el error pero no exponer detalles al cliente
     console.error('[submitLead] Resend error:', error);
     return {
       success: false,
@@ -167,11 +216,16 @@ export async function submitLead(rawPayload: unknown): Promise<SubmitLeadResult>
     };
   }
 
+  // 5. Send to GoHighLevel CRM — INDEPENDENT of Resend.
+  //    Fire after Resend succeeds. Failure here is logged but NEVER shown to user.
+  //    Do NOT await in a blocking way — use void to indicate fire-and-forget intent.
+  sendToGHL(lead).catch((error) => {
+    console.error('[submitLead] GHL post-send catch (non-blocking):', error);
+  });
+
   return {
     success: true,
-    message: lead.isQualified
-      ? 'Tu solicitud fue enviada. Uno de nuestros especialistas te contactará en las próximas 24 horas.'
-      : 'Gracias por tu interés. Hemos recibido tu información.',
+    message: 'Tu solicitud fue enviada. Un especialista te contactará en los próximos 15 minutos.',
     leadId: lead.id,
   };
 }

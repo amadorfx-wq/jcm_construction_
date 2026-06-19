@@ -3,54 +3,23 @@
 // TypeScript strict: true · No `any` · All interfaces readonly
 // ─────────────────────────────────────────────────────────────────────────────
 
-// ─── Funnel / Lead Types ─────────────────────────────────────────────────────
+// ─── Lead / Funnel Types ─────────────────────────────────────────────────────
 
 export type ProjectType = 'cocina' | 'bano' | 'deck' | 'otro';
 
-export type BudgetRange =
-  | 'under_15k'
-  | '15k_30k'
-  | '30k_60k'
-  | '60k_100k'
-  | 'over_100k';
-
-export type FinancingIntent = 'yes' | 'no' | 'maybe';
-
-export interface ContactInfo {
-  readonly name: string;
-  readonly email: string;
-  readonly phone: string;
-  readonly city: string;
-}
-
 export interface LeadFormData {
+  readonly name: string;
+  readonly phone: string;
+  readonly email: string;
   readonly projectType: ProjectType;
-  readonly budgetRange: BudgetRange;
-  readonly financingIntent: FinancingIntent;
-  readonly contact: ContactInfo;
+  readonly wantsFinancing: 'yes' | 'no';
+  readonly consentSms: boolean;
 }
 
 export interface InboundLead extends LeadFormData {
   readonly id: string;
-  readonly isQualified: boolean;
-  readonly derivedToAutomation: boolean;
   readonly submittedAt: string;
 }
-
-/** Presupuesto mínimo que descalifica al lead del proceso de ventas manual. */
-export const DISQUALIFYING_BUDGET: BudgetRange = 'under_15k';
-
-// ─── Funnel Navigation ───────────────────────────────────────────────────────
-
-export const FUNNEL_STEPS = [
-  'project-type',
-  'budget-range',
-  'financing',
-  'contact',
-] as const;
-
-export type FunnelStep = (typeof FUNNEL_STEPS)[number];
-export const TOTAL_FUNNEL_STEPS = FUNNEL_STEPS.length;
 
 // ─── Portfolio / Project Types ────────────────────────────────────────────────
 
