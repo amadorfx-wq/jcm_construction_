@@ -135,11 +135,6 @@ export default function FunnelEngine({ dict }: FunnelEngineProps) {
   // ─── Submit ───────────────────────────────────────────────────────────────
 
   const handleSubmit = () => {
-    if (formData.consentSms !== true) {
-      setErrors((p) => ({ ...p, consentSms: dict.form.consentSms.error }));
-      return;
-    }
-
     const result = leadFormSchema.safeParse(formData);
 
     if (!result.success) {
@@ -147,12 +142,7 @@ export default function FunnelEngine({ dict }: FunnelEngineProps) {
       for (const issue of result.error.issues) {
         const field = issue.path[0] as keyof LeadFormData;
         if (field && !fieldErrors[field]) {
-          // Use dict-based error for consentSms, Zod message for everything else
-          if (field === 'consentSms') {
-            fieldErrors[field] = dict.form.consentSms.error;
-          } else {
-            fieldErrors[field] = issue.message;
-          }
+          fieldErrors[field] = issue.message;
         }
       }
       setErrors(fieldErrors);
@@ -326,7 +316,6 @@ export default function FunnelEngine({ dict }: FunnelEngineProps) {
               checked={formData.consentSms === true}
               onChange={(e) => {
                 setFormData((p) => ({ ...p, consentSms: e.target.checked }));
-                if (errors.consentSms) setErrors((p) => ({ ...p, consentSms: undefined }));
               }}
               className="mt-0.5 h-4 w-4 rounded-sm border-slate-300 accent-rose-600 cursor-pointer flex-shrink-0"
             />
@@ -345,10 +334,6 @@ export default function FunnelEngine({ dict }: FunnelEngineProps) {
               {dict.form.consentSms.termsLink}
             </Link>
           </div>
-
-          {errors.consentSms && (
-            <p className="text-xs text-rose-600 font-inter" role="alert">{errors.consentSms}</p>
-          )}
         </div>
 
         {/* ── Error de envío ────────────────────────────────────────────────── */}

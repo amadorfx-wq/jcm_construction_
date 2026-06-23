@@ -32,9 +32,7 @@ export const leadFormSchema = z.object({
     required_error: 'Indica tu preferencia de financiamiento',
     invalid_type_error: 'Opción de financiamiento inválida',
   }),
-  consentSms: z.literal(true, {
-    errorMap: () => ({ message: 'Debes aceptar recibir mensajes SMS' }),
-  }),
+  consentSms: z.boolean().default(false),
 });
 
 export type LeadFormInput = z.infer<typeof leadFormSchema>;

@@ -74,7 +74,8 @@ async function sendToGHL(lead: z.output<typeof inboundLeadSchema>): Promise<void
     wants_financing: lead.wantsFinancing,
     message:         `Project type: ${projectLabels[lead.projectType] ?? lead.projectType} | Financing: ${financingLabels[lead.wantsFinancing] ?? lead.wantsFinancing}`,
     source:          'Website - Free Estimate Form',
-    consent_sms:     true,
+    consent_sms:             lead.consentSms === true,
+    consent_sms_timestamp:   lead.consentSms === true ? lead.submittedAt : '',
   };
 
   try {
@@ -99,7 +100,13 @@ async function sendToGHL(lead: z.output<typeof inboundLeadSchema>): Promise<void
 // ─── Email builder ────────────────────────────────────────────────────────────
 
 function buildLeadEmailHtml(lead: z.output<typeof inboundLeadSchema>): string {
-  const consentTimestamp = new Date(lead.submittedAt).toLocaleString('en-US', { timeZone: 'America/New_York' });
+  const submittedTimestamp = new Date(lead.submittedAt).toLocaleString('en-US', { timeZone: 'America/New_York' });
+  const didConsent = lead.consentSms === true;
+
+  const consentHtml = didConsent
+    ? `<span style="color:#16a34a;font-weight:600;">✓ YES — OK to text</span>
+       <span style="color:#6b7280;font-size:12px;"> — ${submittedTimestamp} ET</span>`
+    : `<span style="color:#dc2626;font-weight:600;">✗ NO — Call only</span>`;
 
   return `
 <!DOCTYPE html>
@@ -113,7 +120,7 @@ function buildLeadEmailHtml(lead: z.output<typeof inboundLeadSchema>): string {
   <div style="border-left:3px solid #be123c;padding-left:16px;margin-bottom:24px;">
     <h1 style="margin:0;font-size:22px;font-weight:700;">New Lead — JC Milian Construction</h1>
     <p style="margin:4px 0 0;color:#6b7280;font-size:14px;">
-      ID: ${lead.id} · ${consentTimestamp} ET
+      ID: ${lead.id} · ${submittedTimestamp} ET
     </p>
   </div>
 
@@ -151,8 +158,7 @@ function buildLeadEmailHtml(lead: z.output<typeof inboundLeadSchema>): string {
     <tr>
       <td style="padding:10px 0;color:#6b7280;">SMS Consent</td>
       <td style="padding:10px 0;">
-        <span style="color:#16a34a;font-weight:600;">✓ Yes</span>
-        <span style="color:#6b7280;font-size:12px;"> — ${consentTimestamp} ET</span>
+        ${consentHtml}
       </td>
     </tr>
   </table>
@@ -172,15 +178,11 @@ function buildLeadEmailHtml(lead: z.output<typeof inboundLeadSchema>): string {
 // ─── Server Action ────────────────────────────────────────────────────────────
 
 export async function submitLead(rawPayload: unknown): Promise<SubmitLeadResult> {
-  // 0. Validar consentimiento de SMS antes que cualquier otra cosa (defensa en profundidad)
-  if (
-    typeof rawPayload !== 'object' ||
-    rawPayload === null ||
-    (rawPayload as Record<string, any>).consentSms !== true
-  ) {
+  // 0. Basic type guard (consent is optional — no longer blocks submission)
+  if (typeof rawPayload !== 'object' || rawPayload === null) {
     return {
       success: false,
-      message: 'El consentimiento de SMS es obligatorio para continuar.',
+      message: 'Los datos del formulario no son válidos.',
     };
   }
 
