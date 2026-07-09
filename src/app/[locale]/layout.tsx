@@ -6,6 +6,7 @@
 
 import type { Metadata } from 'next';
 import { Inter, Playfair_Display } from 'next/font/google';
+import { Analytics } from '@vercel/analytics/next';
 import { i18n } from '@/i18n/config';
 import '../globals.css';
 
@@ -87,6 +88,7 @@ export default async function LocaleLayout({
     >
       <body className="bg-brand-cream text-slate-900 font-inter antialiased">
         {children}
+        <Analytics />
       </body>
     </html>
   );
